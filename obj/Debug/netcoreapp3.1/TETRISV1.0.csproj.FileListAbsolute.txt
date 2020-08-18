@@ -1,0 +1,13 @@
+/home/ivan/dotnet_project/TETRISV1.0/bin/Debug/netcoreapp3.1/TETRISV1.0
+/home/ivan/dotnet_project/TETRISV1.0/bin/Debug/netcoreapp3.1/TETRISV1.0.deps.json
+/home/ivan/dotnet_project/TETRISV1.0/bin/Debug/netcoreapp3.1/TETRISV1.0.runtimeconfig.json
+/home/ivan/dotnet_project/TETRISV1.0/bin/Debug/netcoreapp3.1/TETRISV1.0.runtimeconfig.dev.json
+/home/ivan/dotnet_project/TETRISV1.0/bin/Debug/netcoreapp3.1/TETRISV1.0.dll
+/home/ivan/dotnet_project/TETRISV1.0/bin/Debug/netcoreapp3.1/TETRISV1.0.pdb
+/home/ivan/dotnet_project/TETRISV1.0/obj/Debug/netcoreapp3.1/TETRISV1.0.csprojAssemblyReference.cache
+/home/ivan/dotnet_project/TETRISV1.0/obj/Debug/netcoreapp3.1/TETRISV1.0.AssemblyInfoInputs.cache
+/home/ivan/dotnet_project/TETRISV1.0/obj/Debug/netcoreapp3.1/TETRISV1.0.AssemblyInfo.cs
+/home/ivan/dotnet_project/TETRISV1.0/obj/Debug/netcoreapp3.1/TETRISV1.0.csproj.CoreCompileInputs.cache
+/home/ivan/dotnet_project/TETRISV1.0/obj/Debug/netcoreapp3.1/TETRISV1.0.dll
+/home/ivan/dotnet_project/TETRISV1.0/obj/Debug/netcoreapp3.1/TETRISV1.0.pdb
+/home/ivan/dotnet_project/TETRISV1.0/obj/Debug/netcoreapp3.1/TETRISV1.0.genruntimeconfig.cache
