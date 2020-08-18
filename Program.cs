@@ -8,7 +8,7 @@ namespace TETRISV1._0
         {
 
 
-            int sizeFild = 22;
+            int sizeFild = 8;
             //char[,] FildGame = new char[sizeFild, sizeFild];
             Random rand = new Random();
             char key = '+';
@@ -31,6 +31,7 @@ namespace TETRISV1._0
                 flag = !flag;
                 System.Console.WriteLine();
                 GameFild.Display();
+                
             }
         }
     }

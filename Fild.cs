@@ -3,10 +3,10 @@ namespace TETRISV1
     class Fild
     {
         public char[,] FildGame;
-        public Angle FigNow = new Angle();
+        public SFigure FigNow = new SFigure();
         public Fild(int rows, int columns)
         {
-            Move.startMove = columns/2;
+            Move.startMove = columns/2-1;
             FildGame = new char[rows, columns];
             for (int i = 0; i < FildGame.GetLength(0)-1; i++)
             {
@@ -27,6 +27,7 @@ namespace TETRISV1
         public void NewFigure()
         {
             Move.dotMove[0] = 0; Move.dotMove[1] = Move.startMove;
+            FigNow.RestorForm();
             // FildGame[Move.dotMove[0], Move.dotMove[1]] = Move.keyBuild;
             // FildGame[Move.dotMove[0] + 1, Move.dotMove[1]] = Move.keyBuild;
             for (int i = 0; i < FigNow.Form.GetLength(0); i++)

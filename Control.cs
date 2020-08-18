@@ -19,6 +19,9 @@ namespace TETRISV1
                     if (Move.CheckDowd(GameFild)) Move.MoveDowd(GameFild);
                     else GameFild.NewFigure();
                     break;
+                case ('e'):
+                    GameFild.FigNow.Roll(GameFild);
+                    break;
             }
         }
 
