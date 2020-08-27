@@ -6,7 +6,7 @@ namespace TETRISV1
         public static void Push(ConsoleKeyInfo key, Fild GameFild)
         {
             char ch = key.KeyChar;
-            
+
             switch (ch)
             {
                 case ('d'):
@@ -19,8 +19,11 @@ namespace TETRISV1
                     if (Move.CheckDowd(GameFild)) Move.MoveDowd(GameFild);
                     else GameFild.NewFigure();
                     break;
-                case ('e'):
+                case (' '):
                     GameFild.FigNow.Roll(GameFild);
+                    break;
+                case ('q'):
+                    Fild.StopGame = false;
                     break;
             }
         }

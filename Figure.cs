@@ -1,5 +1,16 @@
 namespace TETRISV1
 {
+    /*interface IFigures
+    {
+        //int rollCount;
+        public int Next();
+        // public char[,] Form;
+        public void RestorForm();
+        public void Roll(Fild fg);
+        public void RollPosition(int rc, Fild fg);
+        //int Form{get;set;};
+
+    }*/
     // abstract class Figures
     // {
     //     abstract public string name { get; set; }
@@ -34,16 +45,95 @@ namespace TETRISV1
     //     // }
     // }
 
-    class LineSizeTwo// : Figures
+    class LineSizeTwo //: IFigures
     {
-        public string name { get; set; }
-
-        public char[,] Form;
-        public LineSizeTwo()
+        int rollCount = 0;
+        public int Next()
+        {
+            if (rollCount < 1)
+            {
+                return rollCount + 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        public char[,] Form = new char[,] { };
+        public void RestorForm()
         {
             Form = new char[,] {
-                    {Move.keyBuild},
-                    {Move.keyBuild} };
+                        {Move.keyBuild},
+                        {Move.keyBuild}};
+        }
+        public void Roll(Fild fg)
+        {
+            int cc = fg.FigNow.Next();
+            fg.FigNow.RollPosition(cc, fg);
+        }
+        // +  --
+        // +  ++
+        public void RollPosition(int rc, Fild fg)
+        {
+            switch (rc)
+            {
+                case (0):
+                    var f1 = new char[,] {
+                        {Move.keyBuild},
+                        {Move.keyBuild}};
+                    Move.DeleteFig(fg);
+                    bool flag = true;
+                    for (int i = 0; i < f1.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < f1.GetLength(1); j++)
+                        {
+                            if (f1[i, j] == Move.keyBuild)
+                                if (f1[i, j] == fg.FildGame[i + Move.dotMove[0], j + Move.dotMove[1]])
+                                {
+                                    flag = false; break;
+                                }
+                            if (!flag) break;
+                        }
+                        if (!flag) Move.PrintFig(fg);
+                        else
+                        {
+                            Form = f1; rollCount = Next(); Move.PrintFig(fg);
+                        }
+                    }
+                    break;
+                case (1):
+                    var f2 = new char[,] {
+                        {Move.background,Move.background},
+                        {Move.keyBuild,Move.keyBuild}};
+                    Move.DeleteFig(fg);
+                    bool flag2 = true, strf = false;
+                    strf = Move.dotMove[1] == fg.FildGame.GetLength(1) - 1 ||
+                        (fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 1] == Move.keyBuild &&
+                        Move.dotMove[1] != 0);
+                    if (strf) Move.dotMove[1]--;
+                    for (int i = 0; i < f2.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < f2.GetLength(1); j++)
+                        {
+                            if (f2[i, j] == Move.keyBuild)
+                                if (f2[i, j] == fg.FildGame[i + Move.dotMove[0], j + Move.dotMove[1]])
+                                {
+                                    flag2 = false; break;
+                                }
+                            if (!flag2) break;
+                        }
+                    }
+                    if (!flag2)
+                    {
+                        if (strf) Move.dotMove[1]++;
+                        Move.PrintFig(fg);
+                    }
+                    else
+                    {
+                        Form = f2; rollCount = Next(); Move.PrintFig(fg);
+                    }
+                    break;
+            }
         }
     }
     static class Angle
@@ -53,7 +143,7 @@ namespace TETRISV1
                 {Move.keyBuild, Move.keyBuild,Move.keyBuild} };
     }
 
-    class SFigure
+    class SFigure //    : IFigures
     {
         // --- -+-  +--
         // -++ -++  ++-
