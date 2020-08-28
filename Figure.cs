@@ -1,6 +1,6 @@
 namespace TETRISV1
 {
-    /*interface IFigures
+    interface IFigures
     {
         //int rollCount;
         public int Next();
@@ -8,9 +8,9 @@ namespace TETRISV1
         public void RestorForm();
         public void Roll(Fild fg);
         public void RollPosition(int rc, Fild fg);
-        //int Form{get;set;};
+        public char[,] Form{get;set;}
 
-    }*/
+    }
     // abstract class Figures
     // {
     //     abstract public string name { get; set; }
@@ -45,9 +45,10 @@ namespace TETRISV1
     //     // }
     // }
 
-    class LineSizeTwo //: IFigures
+    class LineSizeTwo : IFigures
     {
         int rollCount = 0;
+       
         public int Next()
         {
             if (rollCount < 1)
@@ -59,7 +60,7 @@ namespace TETRISV1
                 return 0;
             }
         }
-        public char[,] Form = new char[,] { };
+        public char[,] Form {get;set;}//= new char[,] { };
         public void RestorForm()
         {
             Form = new char[,] {
@@ -143,7 +144,7 @@ namespace TETRISV1
                 {Move.keyBuild, Move.keyBuild,Move.keyBuild} };
     }
 
-    class SFigure //    : IFigures
+    class SFigure : IFigures
     {
         // --- -+-  +--
         // -++ -++  ++-
@@ -161,7 +162,7 @@ namespace TETRISV1
                 return 0;
             }
         }
-        public char[,] Form = new char[,] { };
+        public char[,] Form {get;set; }
         public void RestorForm()
         {
             Form = new char[,] {

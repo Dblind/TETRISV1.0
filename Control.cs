@@ -23,7 +23,7 @@ namespace TETRISV1
                     GameFild.FigNow.Roll(GameFild);
                     break;
                 case ('q'):
-                    Fild.StopGame = false;
+                    Fild.RunGame = false;
                     break;
             }
         }

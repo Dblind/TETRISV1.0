@@ -56,7 +56,7 @@ namespace TETRISV1
             return true;
         }
         public static void MoveLeft(Fild fg)
-        {            
+        {
             DeleteFig(fg);
             Move.dotMove[1]--;
             PrintFig(fg);
@@ -81,8 +81,8 @@ namespace TETRISV1
             return true;
         }
         public static void MoveRight(Fild fg)
-        {            
-            DeleteFig(fg);     
+        {
+            DeleteFig(fg);
             Move.dotMove[1]++;
             PrintFig(fg);
         }
@@ -123,6 +123,36 @@ namespace TETRISV1
                 {
                     if (fg.FigNow.Form[i, j] == keyBuild)
                         fg.FildGame[i + dotMove[0], j + dotMove[1]] = keyBuild;
+                }
+            }
+        }
+        public static void CheckRows(Fild fg)
+        {
+            var flag = 0b11;
+            for (int i = 0; i < fg.FildGame.GetLength(0)-1; i++)
+            {
+                flag = flag | 0b10;
+                for (int j = 0; j < fg.FildGame.GetLength(1); j++)
+                {
+                    if (fg.FildGame[i, j] == Move.background) { flag = flag & 0b01; break; }
+                }
+                if ((flag & 0b10) == 0b10)
+                {
+                    Fall(i);
+                }
+            }
+            void Fall(int row)
+            {
+                for (int i = row; i > 0; i--)
+                {
+                    for (int j = 0; j < fg.FildGame.GetLength(1); j++)
+                    {
+                        fg.FildGame[i, j] = fg.FildGame[i - 1, j];
+                    }
+                }
+                for (int i = 0, j = 0; j < fg.FildGame.GetLength(1); j++)
+                {
+                    fg.FildGame[i,j] = Move.background;
                 }
             }
         }
