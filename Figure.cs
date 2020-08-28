@@ -246,4 +246,17 @@ namespace TETRISV1
             }
         }
     }
+    class Cube : IFigures
+    {
+        public int Next() {return 0;}
+        public void RestorForm(){
+            Form = new char[,] {
+                        {Move.keyBuild,Move.keyBuild},
+                        {Move.keyBuild,Move.keyBuild}};
+        }
+        public void Roll(Fild fg){}
+        public void RollPosition(int rc, Fild fg){}
+        public char[,] Form{get;set;}
+
+    }
 }

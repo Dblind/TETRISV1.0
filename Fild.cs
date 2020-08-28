@@ -31,14 +31,17 @@ namespace TETRISV1
             Move.CheckRows(this);
             Move.dotMove[0] = 0; Move.dotMove[1] = Move.startMove;
             Random rand = new Random();
-            switch (rand.Next(2))
+            switch (rand.Next(3))
             {
                 case (0):
                     FigNow = new LineSizeTwo(); FigNow.RestorForm();
                     // FigNow = new LineSizeTwo();
                     break;
                 case (1):
-                    FigNow = new SFigure();FigNow.RestorForm();
+                    FigNow = new SFigure(); FigNow.RestorForm();
+                    break;
+                case (2):
+                    FigNow = new Cube(); FigNow.RestorForm();
                     break;
             }
             // FildGame[Move.dotMove[0], Move.dotMove[1]] = Move.keyBuild;
