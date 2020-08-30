@@ -9,17 +9,17 @@ namespace TETRISV1
 
             switch (ch)
             {
-                case ('d'):
+                case ('k'):
                     if (Move.CheckRight(GameFild)) Move.MoveRight(GameFild);
                     break;
-                case ('a'):
+                case ('h'):
                     if (Move.CheckLeft(GameFild)) Move.MoveLeft(GameFild);
                     break;
-                case ('s'):
-                    if (Move.CheckDowd(GameFild)) Move.MoveDowd(GameFild);
+                case ('j'):
+                    if (Move.CheckDowd(GameFild)) {Move.MoveDowd(GameFild); Run.count = 0;}
                     else GameFild.NewFigure();
                     break;
-                case (' '):
+                case ('u'):
                     GameFild.FigNow.Roll(GameFild);
                     break;
                 case ('q'):
