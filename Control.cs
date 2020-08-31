@@ -3,6 +3,7 @@ namespace TETRISV1
 {
     static class Control
     {
+        public static int Score { get; set; }
         public static void Push(ConsoleKeyInfo key, Fild GameFild)
         {
             char ch = key.KeyChar;
@@ -16,7 +17,13 @@ namespace TETRISV1
                     if (Move.CheckLeft(GameFild)) Move.MoveLeft(GameFild);
                     break;
                 case ('j'):
-                    if (Move.CheckDowd(GameFild)) {Move.MoveDowd(GameFild); Run.count = 0;}
+                    if (Move.CheckDowd(GameFild))
+                    {
+                        if (!Run.FlagFastFall) Move.MoveDowd(GameFild); 
+                        Run.FlagFastFall = !Run.FlagFastFall;
+                        Run.count = 0;
+                        Run.StepFall = Run.FlagFastFall ? 11 : 99;
+                    }
                     else GameFild.NewFigure();
                     break;
                 case ('u'):
@@ -24,6 +31,7 @@ namespace TETRISV1
                     break;
                 case ('q'):
                     Fild.RunGame = false;
+                    Console.CursorVisible = true;
                     break;
             }
         }

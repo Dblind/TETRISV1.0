@@ -10,40 +10,6 @@ namespace TETRISV1
         public char[,] Form { get; set; }
 
     }
-    // abstract class Figures
-    // {
-    //     abstract public string name { get; set; }
-
-    //     //abstract public char[,] Form;
-    // }
-
-    // class Squire : Figures
-    // {
-    //     override public string name { get { return name; } set { value = "Squire"; } }
-
-    //     //override public char[,] Form;//{ get; set; }
-    //     // {
-    //     //     get { return Form; }
-    //     //     set
-    //     //     {
-    //     //         char[,] a = {
-    //     //             {'+', '+'},
-    //     //             {'+', '+'}
-    //     //             };
-    //     //         value = a;
-    //     //     }
-    //     // }
-
-    //     //public Squire()
-    //     // {
-    //     //     Form = new char[,] {
-    //     //             {'+', '+'},
-    //     //             {'+', '+'} };
-
-
-    //     // }
-    // }
-
     class LineSizeTwoFigure : IFigures
     {
         int rollCount = 0;
@@ -83,19 +49,6 @@ namespace TETRISV1
             switch (rc)
             {
                 case (0):
-                    // bool flag = true;
-                    // for (int i = 0; i < Form_0.GetLength(0); i++)
-                    // {
-                    //     for (int j = 0; j < Form_0.GetLength(1); j++)
-                    //     {
-                    //         if ((Form_0[i, j] == Move.keyBuild) &&
-                    //             Move.keyBuild == fg.FildGame[i + Move.dotMove[0], j + Move.dotMove[1]])
-                    //         {
-                    //             flag = false; break;
-                    //         }
-                    //     }
-                    //     if (!flag) break;
-                    // }
                     if (SupportMethods.Intersection(Form_0, fg))
                     {
                         Form = Form_0; rollCount = Next();
@@ -128,6 +81,90 @@ namespace TETRISV1
                     else
                     {
                         Form = Form_2; rollCount = Next(); Move.PrintFig(fg);
+                    }
+                    break;
+            }
+        }
+    }
+    class LineFigure : IFigures
+    {
+        int rollCount = 1;
+        char[,] Form_0 = new char[,] {
+                        {Move.keyBuild,Move.keyBuild,Move.keyBuild,Move.keyBuild}};
+        // ....
+        // ....
+        // ++++
+        // ....
+        char[,] Form_1 = new char[,] {
+                        {Move.keyBuild},    // .+..
+                        {Move.keyBuild},    // .+..
+                        {Move.keyBuild},    // .+.+
+                        {Move.keyBuild}};   // .+..
+
+        public int Next() => rollCount > 0 ? 0 : 1;
+        public char[,] Form { get; set; }
+        public void RestorForm() => Form = Form_1;
+        public void Roll(Fild fg) => fg.FigNow.RollPosition(Next(), fg);
+        public void RollPosition(int rc, Fild fg)
+        {
+            switch (rc)
+            {
+                //  0123456789
+                //  -+----+--
+                //  10b4-01b9
+                case (0):
+                    int flagOut0 = 0;
+                    //if (Move.dotMove[1] < fg.FildGame.GetLength(1) / 2) flagOut0 = 0b10000;
+                    if (0 < Move.dotMove[1]) flagOut0 = 0b10000;
+                    if (fg.FildGame.GetLength(1) - 2 > Move.dotMove[1]) flagOut0 |= 0b01000;//  9 - 2 (7) > 6 
+                    if (Move.dotMove[1] > 0 &&
+                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] - 1] == Move.keyBuild)
+                        flagOut0 |= 0b00100;    //010 left block
+                    if (Move.dotMove[1] < fg.FildGame.GetLength(1) - 1 &&
+                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 1] == Move.keyBuild)
+                        flagOut0 |= 0b00010;    // right block +1
+                    if (Move.dotMove[1] < fg.FildGame.GetLength(1) - 2 &&
+                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == Move.keyBuild)
+                        flagOut0 |= 0b00001;    // right block +2
+
+                    if (Move.dotMove[1] == 0 || (flagOut0 & 0b11100) == 0b11100)    // zero, left
+                    {
+                        Move.dotMove[0] += 2;
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        else Move.dotMove[0] -= 2;
+                    }
+                    else if ((flagOut0 & 0b10010) == 0b10010)       //right +1
+                    {
+                        Move.dotMove[0] += 2; Move.dotMove[1] -= 3;
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        else { Move.dotMove[0] -= 2; Move.dotMove[1] += 3; }
+                    }
+                    else if ((flagOut0 & 0b10001) == 0b10001)       //right +2
+                    {
+                        Move.dotMove[0] += 2; Move.dotMove[1] -= 2;
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        else { Move.dotMove[0] -= 2; Move.dotMove[1] += 2; }
+                    }
+                    else if ((flagOut0 & 0b01000) != 0b01000)       //right wall
+                    {
+                        int boxCoordColumn = Move.dotMove[1];
+                        Move.dotMove[0] += 2; Move.dotMove[1] = fg.FildGame.GetLength(1) - 4;
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        else { Move.dotMove[0] -= 2; Move.dotMove[1] = boxCoordColumn; }
+                    }
+                    else        //defalt empty
+                    {
+                        Move.dotMove[0] += 2; Move.dotMove[1]--;
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        else { Move.dotMove[0] -= 2; Move.dotMove[1]++; }
+                    }
+                    break;
+                case (1):
+                    if (Move.dotMove[0] != fg.FildGame.GetLength(0) - 1)
+                    {
+                        Move.dotMove[0] -= 2; Move.dotMove[1]++;
+                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
+                        else { Move.dotMove[0] += 2; Move.dotMove[1]--; }
                     }
                     break;
             }

@@ -163,7 +163,7 @@ namespace TETRISV1
                 }
                 if ((flag & 0b10) == 0b10)
                 {
-                    FallWall(i);
+                    FallWall(i); Control.Score += 100;
                 }
             }
             void FallWall(int row)
