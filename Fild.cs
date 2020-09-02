@@ -7,6 +7,8 @@ namespace TETRISV1
         public static bool RunGame = true;
         public IFigures FigNow; //= new IFigures();
         Random rand = new Random();     //for NewFigure
+        public IFigures FigNext { get; set; }
+
         int numberNextFig;              // for NewFigure
         public Fild(int rows, int columns)
         {
@@ -20,6 +22,7 @@ namespace TETRISV1
                 }
             }
             numberNextFig = rand.Next(1, 7);
+            MakeNextFig();
             // for (int i = rows - 1; i < rows; i++)
             // {
             //     for (int j = 0; j < columns; j++)
@@ -39,33 +42,10 @@ namespace TETRISV1
             }
             catch { }
             Move.dotMove[0] = 0; Move.dotMove[1] = Move.startMove;
-
-            switch (numberNextFig)
-            {
-                case (0):
-                    FigNow = new LineSizeTwoFigure(); FigNow.RestorForm();
-                    // FigNow = new LineSizeTwo();
-                    break;
-                case (1):
-                    FigNow = new SFigure(); FigNow.RestorForm();
-                    break;
-                case (2):
-                    FigNow = new CubeFigure(); FigNow.RestorForm();
-                    break;
-                case (3):
-                    FigNow = new LFigure(); FigNow.RestorForm();
-                    break;
-                case (4):
-                    FigNow = new ReversLFigure(); FigNow.RestorForm();
-                    break;
-                case (5):
-                    FigNow = new ReversSFigure(); FigNow.RestorForm();
-                    break;
-                case (6):
-                    FigNow = new LineFigure(); FigNow.RestorForm();
-                    break;
-            }
+            FigNow = FigNext;
+            MakeNextFig();
             numberNextFig = rand.Next(1, 7);
+
             // FildGame[Move.dotMove[0], Move.dotMove[1]] = Move.keyBuild;
             // FildGame[Move.dotMove[0] + 1, Move.dotMove[1]] = Move.keyBuild;
             // for (int i = 0; i < FigNow.Form.GetLength(0); i++)
@@ -78,6 +58,34 @@ namespace TETRISV1
             //         }
             //     }
             // }
+        }
+        void MakeNextFig()
+        {
+            switch (numberNextFig)
+            {
+                case (0):
+                    FigNext = new LineSizeTwoFigure(); FigNext.RestorForm();
+                    // FigNow = new LineSizeTwo();
+                    break;
+                case (1):
+                    FigNext = new SFigure(); FigNext.RestorForm();
+                    break;
+                case (2):
+                    FigNext = new CubeFigure(); FigNext.RestorForm();
+                    break;
+                case (3):
+                    FigNext = new LFigure(); FigNext.RestorForm();
+                    break;
+                case (4):
+                    FigNext = new ReversLFigure(); FigNext.RestorForm();
+                    break;
+                case (5):
+                    FigNext = new ReversSFigure(); FigNext.RestorForm();
+                    break;
+                case (6):
+                    FigNext = new LineFigure(); FigNext.RestorForm();
+                    break;
+            }
         }
 
         public void Display()
@@ -95,21 +103,33 @@ namespace TETRISV1
                 System.Console.WriteLine();
             }
             Move.DeleteFig(this);
+
+            // print Score
             Console.CursorTop = 0;
-            Console.CursorLeft = this.FildGame.GetLength(1) + 3;
+            Console.CursorLeft = FildGame.GetLength(1) + 3;
             Console.ForegroundColor = ConsoleColor.Red;
             System.Console.WriteLine(String.Format($"{Control.Score,10}"));
 
-            for (int i = 0; i < this.FigNow.Form.GetLength(0); i++)
+            // clear place for view NextFig
+
+            for (int i = 0; i < FigNext.Form.GetLength(0); i++)
+            {
+                ClearLine();
+                for (int j = 0; j < FigNext.Form.GetLength(1); j++)
+                    System.Console.Write(FigNext.Form[i, j]);
+            }
+            if(FigNext.Form.GetLength(0) < 4)
+            {
+                ClearLine();
+            }
+            void ClearLine()
             {
                 System.Console.WriteLine();
-                Console.CursorLeft = this.FildGame.GetLength(1) + 3;// + j;
-                for (int j = 0; j < this.FigNow.Form.GetLength(1); j++)
-                {
-                    //Console.CursorTop = 3 + i;
-                    System.Console.Write(this.FigNow.Form[i, j]);
-                }
+                Console.CursorLeft = FildGame.GetLength(1) + 3;
+                System.Console.Write("....");
+                Console.CursorLeft = FildGame.GetLength(1) + 3;
             }
+
         }
     }
 }

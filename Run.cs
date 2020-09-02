@@ -9,15 +9,17 @@ namespace TETRISV1
         static ConsoleKeyInfo key2;
         static Fild GameFild = new Fild(sizeFild, sizeFild);
         public static int count = 0;
-        public static int StepFall {get;set;} = 99;
-        public static bool FlagFastFall{get;set;} = false;
+        public static int StepFall { get; set; } = 99;
+        public static bool FlagFastFall { get; set; } = false;
         public static void RunGame()
         {
             Console.CursorVisible = false;
             Console.Clear();
+            //GameFild.FigNow = new char[,]{{Move.background}};
             GameFild.NewFigure();
             GameFild.Display();
-            
+            // FigNow = FigNext;
+
             while (Fild.RunGame)
             {
                 GameFild.Display();
@@ -41,7 +43,7 @@ namespace TETRISV1
                 key2 = Console.ReadKey(true);
                 char str = key2.KeyChar;
                 Control.Push(key2, GameFild);
-                
+
                 //TestMove();
             }
         }
