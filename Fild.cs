@@ -21,15 +21,8 @@ namespace TETRISV1
                     FildGame[i, j] = Move.background;
                 }
             }
-            numberNextFig = rand.Next(1, 7);
+            numberNextFig = rand.Next(1, 8);
             MakeNextFig();
-            // for (int i = rows - 1; i < rows; i++)
-            // {
-            //     for (int j = 0; j < columns; j++)
-            //     {
-            //         FildGame[i, j] = Move.keyBottom;
-            //     }
-            // }
         }
 
         public void NewFigure()
@@ -43,21 +36,8 @@ namespace TETRISV1
             catch { }
             Move.dotMove[0] = 0; Move.dotMove[1] = Move.startMove;
             FigNow = FigNext;
+            numberNextFig = rand.Next(1, 8);
             MakeNextFig();
-            numberNextFig = rand.Next(1, 7);
-
-            // FildGame[Move.dotMove[0], Move.dotMove[1]] = Move.keyBuild;
-            // FildGame[Move.dotMove[0] + 1, Move.dotMove[1]] = Move.keyBuild;
-            // for (int i = 0; i < FigNow.Form.GetLength(0); i++)
-            // {
-            //     for (int j = 0; j < FigNow.Form.GetLength(1); j++)
-            //     {
-            //         if (FigNow.Form[i, j] == Move.keyBuild)
-            //         {
-            //             FildGame[i + Move.dotMove[0], j + Move.dotMove[1]] = Move.keyBuild;
-            //         }
-            //     }
-            // }
         }
         void MakeNextFig()
         {
@@ -85,6 +65,9 @@ namespace TETRISV1
                 case (6):
                     FigNext = new LineFigure(); FigNext.RestorForm();
                     break;
+                case (7):
+                    FigNext = new TFigure(); FigNext.RestorForm();
+                    break;
             }
         }
 
@@ -92,8 +75,8 @@ namespace TETRISV1
         {
             Move.PrintFig(this);
             System.Console.CursorTop = 0; Console.CursorLeft = 0;
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.BackgroundColor = Setting.ConsColBackground;
+            Console.ForegroundColor = Setting.ConsColBrick;
             for (int i = 0; i < FildGame.GetLength(0); i++)
             {
                 for (int j = 0; j < FildGame.GetLength(1); j++)
@@ -118,15 +101,16 @@ namespace TETRISV1
                 for (int j = 0; j < FigNext.Form.GetLength(1); j++)
                     System.Console.Write(FigNext.Form[i, j]);
             }
-            if(FigNext.Form.GetLength(0) < 4)
+            if (FigNext.Form.GetLength(0) < 3)
             {
-                ClearLine();
+                ClearLine(); ClearLine();
             }
+            else if (FigNext.Form.GetLength(0) < 4) ClearLine();
             void ClearLine()
             {
                 System.Console.WriteLine();
                 Console.CursorLeft = FildGame.GetLength(1) + 3;
-                System.Console.Write("....");
+                System.Console.Write($"{Move.background}{Move.background}{ Move.background}{ Move.background}");
                 Console.CursorLeft = FildGame.GetLength(1) + 3;
             }
 

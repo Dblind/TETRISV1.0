@@ -7,8 +7,10 @@ namespace TETRISV1
     {
         public static int startMove;
         public static void Wait(double T) => Thread.Sleep((int)(T * 1000));
-        public static int[] dotMove = new int[2];
         public static char keyBuild = '$', keyBottom = '#', background = '.';
+
+        public static int[] dotMove = new int[2];
+        // public static char keyBuild = '$', keyBottom = '#', background = '.';
         public static bool CheckDowd(Fild fg)
         {
             // [j, q]

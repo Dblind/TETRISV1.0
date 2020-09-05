@@ -3,11 +3,25 @@ using System.Threading;
 
 namespace TETRISV1
 {
+    class RunNewGame
+    {
+        public Menu NewGame = new Menu();
+        public static bool RunGameFlag = true;
+        public void RunGame()
+        {
+            while (RunGameFlag)
+            {
+                Rellise.MainMenuRun();
+            }
+        }
+    }
+    delegate void FallDeleg();
     class Run
     {
+        public static event FallDeleg TestDeleg;
         static int sizeFild = 10;
         static ConsoleKeyInfo key2;
-        static Fild GameFild = new Fild(sizeFild, sizeFild);
+        static Fild GameFild ;
         public static int count = 0;
         public static int StepFall { get; set; } = 99;
         public static bool FlagFastFall { get; set; } = false;
@@ -15,7 +29,7 @@ namespace TETRISV1
         {
             Console.CursorVisible = false;
             Console.Clear();
-            //GameFild.FigNow = new char[,]{{Move.background}};
+            GameFild= new Fild(sizeFild, sizeFild);
             GameFild.NewFigure();
             GameFild.Display();
             // FigNow = FigNext;
@@ -43,9 +57,20 @@ namespace TETRISV1
                 key2 = Console.ReadKey(true);
                 char str = key2.KeyChar;
                 Control.Push(key2, GameFild);
-
+                TestDeleg = TM2;
+                //TM2();
                 //TestMove();
             }
+        }
+        static void TM2()
+        {
+            if (Console.KeyAvailable != false)
+            {
+                Control.Push(key2, GameFild);
+                TM2();
+            }
+
+        
         }
     }
 }

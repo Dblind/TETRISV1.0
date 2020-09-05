@@ -22,7 +22,7 @@ namespace TETRISV1
                         if (!Run.FlagFastFall) Move.MoveDowd(GameFild); 
                         Run.FlagFastFall = !Run.FlagFastFall;
                         Run.count = 0;
-                        Run.StepFall = Run.FlagFastFall ? 11 : 99;
+                        Run.StepFall = Run.FlagFastFall ? 10 : 99;
                     }
                     else GameFild.NewFigure();
                     break;
@@ -31,6 +31,8 @@ namespace TETRISV1
                     break;
                 case ('q'):
                     Fild.RunGame = false;
+                    Score = 0;
+                    Console.ResetColor();
                     Console.CursorVisible = true;
                     break;
             }
