@@ -122,6 +122,12 @@ namespace TETRISV1
                     }
                     MainMenuSetting();
                     break;
+                case (6):
+                    Setting.WriteFileSetting();
+                    break;
+                default:
+                    //MainMenuSetting();
+                break;
             }
 
         }

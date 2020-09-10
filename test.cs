@@ -1,31 +1,34 @@
 using System;
 using System.Threading;
+using System.Text;
+using System.IO;
 
 class program
 {
 
-    delegate void deleg(int f);
+    /* delegate void deleg(int f);
     class run
     {
-
     }
     static void MainT()
     {
-        deleg del1 = Sum;
-        del1 +=Sum;
-        del1(3);
-        void Sum(int f)
-        {
-            System.Console.WriteLine($"{f}+2=5");
-               }
-               var ffasf = 99;
-        // int Score = 23230;
-        // void Testf(int f)
-        // {
-        //     System.Console.WriteLine(String.Format($"{f:000000000}", Score));
-        //     System.Console.Write(String.Format($"{f,10}", Score)); System.Console.WriteLine("|");
-        //     //System.Console.WriteLine("test");
-        // }
-        // Testf(0); Testf(3012); Testf(int.MaxValue);
+        System.Console.WriteLine(Environment.CurrentDirectory);
+        System.Console.WriteLine();
+        //File.WriteAllText("test.txt","HW!");
+        string str = File.ReadAllText("test.txt");
+        System.Console.WriteLine(str);
+        string[] lines = File.ReadAllLines("test.txt");
+        foreach(var e in lines) System.Console.WriteLine(e);
+    } */
+    class faf
+    {
+        public static char ch = '1';
+
+        
+    }
+    class F2
+    {
+        
+        char ch2 = faf.ch;
     }
 }

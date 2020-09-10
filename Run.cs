@@ -5,10 +5,11 @@ namespace TETRISV1
 {
     class RunNewGame
     {
-        public Menu NewGame = new Menu();
+        //public Menu NewGame = new Menu();
         public static bool RunGameFlag = true;
         public void RunGame()
         {
+            Setting.ReadFileSetting();
             while (RunGameFlag)
             {
                 Rellise.MainMenuRun();
@@ -21,7 +22,7 @@ namespace TETRISV1
         public static event FallDeleg TestDeleg;
         static int sizeFild = 10;
         static ConsoleKeyInfo key2;
-        static Fild GameFild ;
+        static Fild GameFild;
         public static int count = 0;
         public static int StepFall { get; set; } = 99;
         public static bool FlagFastFall { get; set; } = false;
@@ -29,7 +30,7 @@ namespace TETRISV1
         {
             Console.CursorVisible = false;
             Console.Clear();
-            GameFild= new Fild(sizeFild, sizeFild);
+            GameFild = new Fild(sizeFild, sizeFild);
             GameFild.NewFigure();
             GameFild.Display();
             // FigNow = FigNext;
@@ -58,19 +59,23 @@ namespace TETRISV1
                 char str = key2.KeyChar;
                 Control.Push(key2, GameFild);
                 TestDeleg = TM2;
+                //TestDeleg();
                 //TM2();
                 //TestMove();
             }
         }
         static void TM2()
         {
-            if (Console.KeyAvailable != false)
+            if (Console.KeyAvailable == true)
             {
-                Control.Push(key2, GameFild);
-                TM2();
+                if (Move.CheckRight(GameFild)) Move.MoveRight(GameFild);
+                //Control.Push(key2, GameFild);
+                //TM2();
+                Thread.Sleep(100);
+                TestDeleg();
             }
 
-        
+
         }
     }
 }
