@@ -8,9 +8,10 @@ namespace TETRISV1._0
         static void Main(string[] args)
         {
             //Run runGame = new Run();
+            
             RunNewGame NewGame = new RunNewGame();
             NewGame.RunGame();
-           
+
             /*
             int sizeFild = 10;
             //char[,] FildGame = new char[sizeFild, sizeFild];

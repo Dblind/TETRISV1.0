@@ -9,7 +9,8 @@ namespace TETRISV1
         public static bool RunGameFlag = true;
         public void RunGame()
         {
-            Setting.ReadFileSetting();
+            try { Setting.ReadFileSetting(); }
+            catch { }
             while (RunGameFlag)
             {
                 Rellise.MainMenuRun();
@@ -20,7 +21,6 @@ namespace TETRISV1
     class Run
     {
         public static event FallDeleg TestDeleg;
-        static int sizeFild = 10;
         static ConsoleKeyInfo key2;
         static Fild GameFild;
         public static int count = 0;
@@ -30,7 +30,7 @@ namespace TETRISV1
         {
             Console.CursorVisible = false;
             Console.Clear();
-            GameFild = new Fild(sizeFild, sizeFild);
+            GameFild = new Fild(Setting.FildHeight, Setting.FildWidth);
             GameFild.NewFigure();
             GameFild.Display();
             // FigNow = FigNext;
@@ -40,7 +40,7 @@ namespace TETRISV1
                 GameFild.Display();
                 TestMove();
 
-                Thread.Sleep(10);
+                Thread.Sleep(Setting.Speed);
                 if (count > StepFall)
                 {
                     count = 0;
@@ -56,7 +56,6 @@ namespace TETRISV1
             if (Console.KeyAvailable == true)
             {
                 key2 = Console.ReadKey(true);
-                char str = key2.KeyChar;
                 Control.Push(key2, GameFild);
                 TestDeleg = TM2;
                 //TestDeleg();

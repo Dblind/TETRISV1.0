@@ -6,7 +6,7 @@ using System.IO;
 class program
 {
 
-    /* delegate void deleg(int f);
+    delegate void deleg(int f);
     class run
     {
     }
@@ -15,20 +15,17 @@ class program
         System.Console.WriteLine(Environment.CurrentDirectory);
         System.Console.WriteLine();
         //File.WriteAllText("test.txt","HW!");
+        var rwf = new RWF();
+        //File.WriteAllBytes(rwf,"set.o");
         string str = File.ReadAllText("test.txt");
         System.Console.WriteLine(str);
         string[] lines = File.ReadAllLines("test.txt");
         foreach(var e in lines) System.Console.WriteLine(e);
-    } */
-    class faf
-    {
-        public static char ch = '1';
-
-        
     }
-    class F2
+    
+    class RWF
     {
-        
-        char ch2 = faf.ch;
+        int r = 0;
+        string s = "a";
     }
 }
