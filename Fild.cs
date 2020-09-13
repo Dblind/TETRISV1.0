@@ -3,7 +3,7 @@ namespace TETRISV1
 {
     class Fild
     {
-        public char[,] FildGame = new char[,] { { Move.background } };
+        public char[,] FildGame = new char[,] { { Setting.background } };
         public static bool RunGame = true;
         public IFigures FigNow; //= new IFigures();
         Random rand = new Random();     //for NewFigure
@@ -18,7 +18,7 @@ namespace TETRISV1
             {
                 for (int j = 0; j < FildGame.GetLength(1); j++)
                 {
-                    FildGame[i, j] = Move.background;
+                    FildGame[i, j] = Setting.background;
                 }
             }
             numberNextFig = rand.Next(1, 8);
@@ -36,8 +36,27 @@ namespace TETRISV1
             catch { }
             Move.dotMove[0] = 0; Move.dotMove[1] = Move.startMove;
             FigNow = FigNext;
-            numberNextFig = rand.Next(1, 8);
+            numberNextFig = rand.Next(3, 5);
             MakeNextFig();
+            if (!SupportMethods.Intersection(FigNow.Form, this))
+            {
+                Console.CursorTop = 3; Console.CursorLeft = 4;
+                Console.BackgroundColor = ConsoleColor.DarkMagenta;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                System.Console.Write("< Game Over >");
+                bool flag = true;
+                do
+                {
+                    if ('q' == Console.ReadKey(true).KeyChar) flag = false;
+                }
+                while (flag);
+                Fild.RunGame = false;
+                Control.Score = 0;
+                Console.ResetColor();
+                Console.CursorVisible = true;
+
+
+            }
         }
         void MakeNextFig()
         {
@@ -110,9 +129,16 @@ namespace TETRISV1
             {
                 System.Console.WriteLine();
                 Console.CursorLeft = FildGame.GetLength(1) + 3;
-                System.Console.Write($"{Move.background}{Move.background}{ Move.background}{ Move.background}");
+                System.Console.Write($"{Setting.background}{Setting.background}{ Setting.background}{ Setting.background}");
                 Console.CursorLeft = FildGame.GetLength(1) + 3;
             }
+
+            // Task
+            System.Console.WriteLine();
+            System.Console.WriteLine();
+            Console.CursorLeft = FildGame.GetLength(1) + 3;
+            System.Console.Write("Q: quit.");
+
 
         }
     }
