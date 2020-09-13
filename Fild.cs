@@ -1,9 +1,12 @@
 using System;
 namespace TETRISV1
 {
+    delegate void DisplayVariable();
     class Fild
     {
         public char[,] FildGame = new char[,] { { Setting.background } };
+        public static FildColor FCScreen;// = new FildColor(GameFild);
+
         public static bool RunGame = true;
         public IFigures FigNow; //= new IFigures();
         Random rand = new Random();     //for NewFigure
@@ -23,6 +26,7 @@ namespace TETRISV1
             }
             numberNextFig = rand.Next(1, 8);
             MakeNextFig();
+            if (Setting.ColorScreen == 1) FCScreen = new FildColor(this);
         }
 
         public void NewFigure()
@@ -36,7 +40,7 @@ namespace TETRISV1
             catch { }
             Move.dotMove[0] = 0; Move.dotMove[1] = Move.startMove;
             FigNow = FigNext;
-            numberNextFig = rand.Next(3, 5);
+            numberNextFig = rand.Next(1, 8);
             MakeNextFig();
             if (!SupportMethods.Intersection(FigNow.Form, this))
             {
@@ -92,7 +96,8 @@ namespace TETRISV1
 
         public void Display()
         {
-            Move.PrintFig(this);
+            ColorDisplay.ColorPrintDisplay(Run.FCScreen);
+           /*  Move.PrintFig(this);
             System.Console.CursorTop = 0; Console.CursorLeft = 0;
             Console.BackgroundColor = Setting.ConsColBackground;
             Console.ForegroundColor = Setting.ConsColBrick;
@@ -138,7 +143,7 @@ namespace TETRISV1
             System.Console.WriteLine();
             Console.CursorLeft = FildGame.GetLength(1) + 3;
             System.Console.Write("Q: quit.");
-
+ */
 
         }
     }

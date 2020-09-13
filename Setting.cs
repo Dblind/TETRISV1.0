@@ -11,6 +11,7 @@ namespace TETRISV1
         public static int FildWidth = 10;
         public static int FildHeight = 10;
         public static int Speed = 10;
+        public static int ColorScreen = 0;
         public static ConsoleColor ConsColBrick { get; set; } = ConsoleColor.Cyan;
         public static ConsoleColor ConsColBackground { get; set; } = ConsoleColor.Black;
         public static void ReadFileSetting()

@@ -5,9 +5,10 @@ namespace TETRISV1
 
     static class Move
     {
+        public static MoveBrick AddBrickColor;
         public static int startMove;
         public static void Wait(double T) => Thread.Sleep((int)(T * 1000));
-              public static int[] dotMove = new int[2];
+        public static int[] dotMove = new int[2];
         public static bool CheckDowd(Fild fg)
         {
             if (Move.dotMove[0] + fg.FigNow.Form.GetLength(0) == fg.FildGame.GetLength(0))
@@ -22,7 +23,7 @@ namespace TETRISV1
             }
         }
         public static void MoveDowd(Fild fg)
-        {           
+        {
             Move.dotMove[0]++;
         }
 
@@ -80,7 +81,10 @@ namespace TETRISV1
                 for (int j = 0; j < fg.FigNow.Form.GetLength(1); j++)
                 {
                     if (fg.FigNow.Form[i, j] == Setting.keyBuild)
+                    {
                         fg.FildGame[i + dotMove[0], j + dotMove[1]] = Setting.keyBuild;
+                        AddBrickColor(i, j, Setting.ConsColBrick);
+                    }
                 }
             }
         }

@@ -22,7 +22,7 @@ namespace TETRISV1
     {
         public static event FallDeleg TestDeleg;
         static ConsoleKeyInfo key2;
-        static Fild GameFild;
+        public static Fild GameFild;
         public static int count = 0;
         public static int StepFall { get; set; } = 99;
         public static bool FlagFastFall { get; set; } = false;
