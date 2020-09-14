@@ -5,8 +5,7 @@ namespace TETRISV1
 
     static class Move
     {
-        public static MoveBrick AddBrickColor;
-        public static int startMove;
+        public static int startMovePoint;
         public static void Wait(double T) => Thread.Sleep((int)(T * 1000));
         public static int[] dotMove = new int[2];
         public static bool CheckDowd(Fild fg)
@@ -70,7 +69,11 @@ namespace TETRISV1
                 for (int j = 0; j < fg.FigNow.Form.GetLength(1); j++)
                 {
                     if (fg.FigNow.Form[i, j] == Setting.keyBuild)
+                    {
                         fg.FildGame[i + dotMove[0], j + dotMove[1]] = Setting.background;
+                        if (fg.DelBrickColor != null)
+                            fg.DelBrickColor(i + dotMove[0], j + dotMove[1], Setting.ConsColBackground);
+                    }
                 }
             }
         }
@@ -83,7 +86,8 @@ namespace TETRISV1
                     if (fg.FigNow.Form[i, j] == Setting.keyBuild)
                     {
                         fg.FildGame[i + dotMove[0], j + dotMove[1]] = Setting.keyBuild;
-                        AddBrickColor(i, j, Setting.ConsColBrick);
+                        if (fg.AddBrickColor != null)
+                            fg.AddBrickColor(dotMove[0] + i, dotMove[1] + j, fg.FigNow.FigureColor);
                     }
                 }
             }
@@ -111,11 +115,15 @@ namespace TETRISV1
                     for (int j = 0; j < fg.FildGame.GetLength(1); j++)
                     {
                         fg.FildGame[i, j] = fg.FildGame[i - 1, j];
+                        if (Run.GameFild.FallWallColorScreen != null)
+                            Run.GameFild.FallWallColorScreen(i, j);
                     }
                 }
                 for (int i = 0, j = 0; j < fg.FildGame.GetLength(1); j++)
                 {
                     fg.FildGame[i, j] = Setting.background;
+                    if (Run.GameFild.ClearUpLine != null)
+                        Run.GameFild.ClearUpLine(i, j);
                 }
             }
         }

@@ -19,7 +19,7 @@ namespace TETRISV1
                 case ('j'):
                     if (Move.CheckDowd(GameFild))
                     {
-                        if (!Run.FlagFastFall) Move.MoveDowd(GameFild); 
+                        if (!Run.FlagFastFall) Move.MoveDowd(GameFild);
                         Run.FlagFastFall = !Run.FlagFastFall;
                         Run.count = 0;
                         Run.StepFall = Run.FlagFastFall ? 10 : 99;

@@ -31,6 +31,16 @@ namespace TETRISV1
             Console.CursorVisible = false;
             Console.Clear();
             GameFild = new Fild(Setting.FildHeight, Setting.FildWidth);
+            if (Setting.ColorScreen == 1)
+            {
+                GameFild.FCScreen = new FildColor(GameFild);
+                GameFild.AddBrickColor += Run.GameFild.FCScreen.AddBrick;
+                GameFild.DelBrickColor += Run.GameFild.FCScreen.DelBrick;
+                GameFild.DisplayType += ColorDisplay.ColorPrintDisplay;
+                GameFild.FallWallColorScreen += GameFild.FCScreen.FallWall;
+                GameFild.ClearUpLine += GameFild.FCScreen.ClearUpLine;
+            }
+            else GameFild.DisplayType += PrintScreen.PrintCharScreen;
             GameFild.NewFigure();
             GameFild.Display();
             // FigNow = FigNext;
@@ -40,14 +50,14 @@ namespace TETRISV1
                 GameFild.Display();
                 TestMove();
 
-                Thread.Sleep(Setting.Speed);
+                Thread.Sleep(10);
                 if (count > StepFall)
                 {
                     count = 0;
                     if (Move.CheckDowd(GameFild)) Move.MoveDowd(GameFild);
                     else GameFild.NewFigure();
                 }
-                else count++;
+                else count += Setting.Speed;//count++;
 
             }
         }
@@ -57,7 +67,7 @@ namespace TETRISV1
             {
                 key2 = Console.ReadKey(true);
                 Control.Push(key2, GameFild);
-                TestDeleg = TM2;
+                //TestDeleg = TM2;
                 //TestDeleg();
                 //TM2();
                 //TestMove();
@@ -70,7 +80,7 @@ namespace TETRISV1
                 if (Move.CheckRight(GameFild)) Move.MoveRight(GameFild);
                 //Control.Push(key2, GameFild);
                 //TM2();
-                Thread.Sleep(100);
+                //Thread.Sleep(100);
                 TestDeleg();
             }
 

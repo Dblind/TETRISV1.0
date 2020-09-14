@@ -1,8 +1,12 @@
+using System;
+
 namespace TETRISV1
 {
     interface IFigures
     {
         //int rollCount;
+        public ConsoleColor FigureColor { get; set; }//= ConsoleColor.Cyan;
+
         public int Next();
         public void RestorForm();
         public void Roll(Fild fg);
@@ -12,6 +16,7 @@ namespace TETRISV1
     }
     class LineSizeTwoFigure : IFigures
     {
+        public ConsoleColor FigureColor { get; set; }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
                         {Setting.keyBuild},    // +
@@ -88,6 +93,8 @@ namespace TETRISV1
     }
     class LineFigure : IFigures
     {
+        public ConsoleColor FigureColor { get; set; }
+        public LineFigure() { FigureColor = Setting.FigColor[5]; }
         int rollCount = 1;
         char[,] Form_0 = new char[,] {
                         {Setting.keyBuild,Setting.keyBuild,Setting.keyBuild,Setting.keyBuild}};
@@ -182,6 +189,8 @@ namespace TETRISV1
         //  ++ -++  ++-
         //  -+ ++-  -+-
 
+        public ConsoleColor FigureColor { get; set; }
+        public SFigure() { FigureColor = Setting.FigColor[0]; }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
                         {Setting.keyBuild, Setting.background},
@@ -223,6 +232,8 @@ namespace TETRISV1
     }
     class ReversSFigure : IFigures
     {
+        public ConsoleColor FigureColor { get; set; }
+        public ReversSFigure() { FigureColor = Setting.FigColor[1]; }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
                         {Setting.background, Setting.keyBuild},    // -+  
@@ -264,6 +275,8 @@ namespace TETRISV1
     }
     class CubeFigure : IFigures
     {
+        public ConsoleColor FigureColor { get; set; }
+        public CubeFigure() { FigureColor = Setting.FigColor[4]; }
         public int Next() { return 0; }
         public void RestorForm()
         {
@@ -278,6 +291,8 @@ namespace TETRISV1
     }
     class LFigure : IFigures
     {
+        public ConsoleColor FigureColor { get; set; }
+        public LFigure() { FigureColor = Setting.FigColor[2]; }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
                         {Setting.keyBuild,Setting.background},    // +.
@@ -397,6 +412,7 @@ namespace TETRISV1
     }
     class LFigureV2 : IFigures      // have bug
     {
+        public ConsoleColor FigureColor { get; set; }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
                         {Setting.keyBuild,Setting.background},    // +.
@@ -466,6 +482,8 @@ namespace TETRISV1
     }
     class ReversLFigure : IFigures
     {
+        public ConsoleColor FigureColor { get; set; }
+        public ReversLFigure() { FigureColor = Setting.FigColor[3]; }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
                         {Setting.background,Setting.keyBuild},    // .+
@@ -572,6 +590,7 @@ namespace TETRISV1
     }
     class ReversLFigureV2 : IFigures        // have bug
     {
+        public ConsoleColor FigureColor { get; set; }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
                         {Setting.background,Setting.keyBuild},    // .+
@@ -641,6 +660,8 @@ namespace TETRISV1
 
     class TFigure : IFigures
     {
+        public ConsoleColor FigureColor { get; set; }
+        public TFigure() { FigureColor = Setting.FigColor[6]; }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
                         {Setting.background,Setting.background,Setting.background},  // ...

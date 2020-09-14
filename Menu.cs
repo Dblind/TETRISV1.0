@@ -52,6 +52,7 @@ namespace TETRISV1
             System.Console.WriteLine($"6 Height: {Setting.FildHeight}");
             System.Console.WriteLine($"7 Speed: {Setting.Speed}");
             System.Console.WriteLine("8 Back");
+            System.Console.WriteLine($"9 Color Type: {Setting.ColorScreen}");
             MainMenuSettingHandler(ReturnKey());
         }
         static void MainMenuSettingHandler(int v)
@@ -156,6 +157,18 @@ namespace TETRISV1
                 case (8):
                     Setting.WriteFileSetting();
                     break;
+                case (9):
+                    if (Setting.ColorScreen == 0)
+                    {
+                        Setting.ColorScreen = 1;
+                        MainMenuSetting();
+                    }
+                    else
+                    {
+                        Setting.ColorScreen = 0;
+                        MainMenuSetting();
+                    }
+                    break;
                 default:
                     MainMenuSetting();
                     break;
@@ -171,7 +184,7 @@ namespace TETRISV1
                 Menu.menuKeyInfo = Console.ReadKey(true);
                 Menu.charMenuKey = Menu.menuKeyInfo.KeyChar;
                 //    str = Console.ReadKey(true).ToString();//"" + Menu.MMKey.KeyChar;
-                if ('0' < Menu.charMenuKey & Menu.charMenuKey < '9')
+                if ('0' < Menu.charMenuKey & Menu.charMenuKey < '9' + 1)
                 {
                     str = Menu.charMenuKey.ToString();
                 }
