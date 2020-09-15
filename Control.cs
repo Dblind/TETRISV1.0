@@ -30,7 +30,7 @@ namespace TETRISV1
                     GameFild.FigNow.Roll(GameFild);
                     break;
                 case ('q'):
-                    Fild.RunGame = false;
+                    GameFild.RunGame = false;
                     Score = 0;
                     Console.ResetColor();
                     Console.CursorVisible = true;

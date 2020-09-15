@@ -11,12 +11,13 @@ namespace TETRISV1
         public static int FildWidth = 10;
         public static int FildHeight = 10;
         public static int Speed = 10;
-        public static int ColorScreen = 1;
+        public static int isColorScreen = 1;
         public static ConsoleColor ConsColBrick { get; set; } = ConsoleColor.Cyan;
         public static ConsoleColor ConsColBackground { get; set; } = ConsoleColor.Black;
         public static ConsoleColor[] FigColor = new ConsoleColor[8];
+        public static bool isSingleColorBlock = false;
 
-        // SFig[0], RSFig[1], LFig[2], RLFig[3], Cube[4], Line[5], TFig[6], ColorScreen
+        // SFig[0], RSFig[1], LFig[2], RLFig[3], Cube[4], Line[5], TFig[6], isColorScreen
         public static void ReadFileSetting()
         {
             string[] settingLines = File.ReadAllLines("setting.txt");
@@ -28,11 +29,13 @@ namespace TETRISV1
             ConsColBrick = (ConsoleColor)int.Parse(settingLines[5]);
             ConsColBackground = (ConsoleColor)int.Parse(settingLines[6]);
             Speed = int.Parse(settingLines[7]);
+            //8 - 14
             for (int i = 0; i < 7; i++)
             {
                 FigColor[i] = (ConsoleColor)int.Parse(settingLines[i + 8]);
             }
-            ColorScreen = int.Parse(settingLines[15]);
+            isColorScreen = int.Parse(settingLines[15]);
+            isSingleColorBlock = int.Parse(settingLines[16]) == 1 ? true : false;
         }
         public static void WriteFileSetting()
         {
@@ -40,7 +43,9 @@ namespace TETRISV1
             sB.Append($"{keyBuild}\n{keyBottom}\n{background}\n{FildWidth}\n{FildHeight}\n"); // 5
             sB.Append($"{(int)ConsColBrick}\n{(int)ConsColBackground}\n{Speed}\n");
             sB.Append($"{(int)FigColor[0]}\n{(int)FigColor[1]}\n{(int)FigColor[2]}\n{(int)FigColor[3]}\n");
-            sB.Append($"{(int)FigColor[4]}\n{(int)FigColor[5]}\n{(int)FigColor[6]}\n{ColorScreen}\n");
+            sB.Append($"{(int)FigColor[4]}\n{(int)FigColor[5]}\n{(int)FigColor[6]}\n{isColorScreen}\n");
+            // 16
+            sB.Append($"{(isSingleColorBlock ? 1 : 0)}\n");
 
             File.WriteAllText("setting.txt", sB.ToString());
         }

@@ -13,7 +13,7 @@ namespace TETRISV1
             catch { }
             while (RunGameFlag)
             {
-                Rellise.MainMenuRun();
+                Menu.MainMenu.MainMenuWriter();
             }
         }
     }
@@ -31,7 +31,7 @@ namespace TETRISV1
             Console.CursorVisible = false;
             Console.Clear();
             GameFild = new Fild(Setting.FildHeight, Setting.FildWidth);
-            if (Setting.ColorScreen == 1)
+            if (Setting.isColorScreen == 1)
             {
                 GameFild.FCScreen = new FildColor(GameFild);
                 GameFild.AddBrickColor += Run.GameFild.FCScreen.AddBrick;
@@ -45,12 +45,11 @@ namespace TETRISV1
             GameFild.Display();
             // FigNow = FigNext;
 
-            while (Fild.RunGame)
+            while (GameFild.RunGame)
             {
                 GameFild.Display();
                 TestMove();
 
-                Thread.Sleep(10);
                 if (count > StepFall)
                 {
                     count = 0;
@@ -58,7 +57,7 @@ namespace TETRISV1
                     else GameFild.NewFigure();
                 }
                 else count += Setting.Speed;//count++;
-
+                Thread.Sleep(10);
             }
         }
         static void TestMove()

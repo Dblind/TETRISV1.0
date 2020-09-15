@@ -1,0 +1,27 @@
+/*
+    1 New game
+    2 Load game
+    3 Save game
+
+    4 Setting
+        Video option
+            Screen type is
+            Color op
+                Single color: is
+                Block color:
+                Background color:
+                Figures Color
+
+            Text op
+                Char block
+                Block color
+                Char background
+                Background color
+        Game option
+            Width
+            Height
+            Speed
+
+    8 Exit
+
+*/

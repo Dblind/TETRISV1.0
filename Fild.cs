@@ -14,7 +14,7 @@ namespace TETRISV1
         public char[,] FildGame = new char[,] { { Setting.background } };
         public FildColor FCScreen;// = new FildColor(GameFild);
 
-        public static bool RunGame = true;
+        public  bool RunGame = true;
         public IFigures FigNow; //= new IFigures();
         Random rand = new Random();     //for NewFigure
         public IFigures FigNext { get; set; }
@@ -61,7 +61,7 @@ namespace TETRISV1
                     if ('q' == Console.ReadKey(true).KeyChar) flag = false;
                 }
                 while (flag);
-                Fild.RunGame = false;
+                this.RunGame = false;
                 Control.Score = 0;
                 Console.ResetColor();
                 Console.CursorVisible = true;
