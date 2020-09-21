@@ -9,7 +9,7 @@ namespace TETRISV1
         public static bool RunGameFlag = true;
         public void RunGame()
         {
-            try { Setting.ReadFileSetting(); }
+            try { Settings.ReadSettingsFileAndApply(); }
             catch { }
             while (RunGameFlag)
             {
@@ -30,8 +30,8 @@ namespace TETRISV1
         {
             Console.CursorVisible = false;
             Console.Clear();
-            GameFild = new Fild(Setting.FildHeight, Setting.FildWidth);
-            if (Setting.isColorScreen == 1)
+            GameFild = new Fild(Settings.FildHeight, Settings.FildWidth);
+            if (Settings.isColorScreen == 1)
             {
                 GameFild.FCScreen = new FildColor(GameFild);
                 GameFild.AddBrickColor += Run.GameFild.FCScreen.AddBrick;
@@ -56,7 +56,7 @@ namespace TETRISV1
                     if (Move.CheckDowd(GameFild)) Move.MoveDowd(GameFild);
                     else GameFild.NewFigure();
                 }
-                else count += Setting.Speed;//count++;
+                else count += Settings.Speed;//count++;
                 Thread.Sleep(10);
             }
         }

@@ -7,14 +7,20 @@ namespace TETRISV1
         public static void Push(ConsoleKeyInfo key, Fild GameFild)
         {
             char ch = key.KeyChar;
+            if (ch.Equals(Settings.controlKeys[0])) ch = 'h';
+            else if (ch.Equals(Settings.controlKeys[1])) ch = 'k';
+            else if (ch.Equals(Settings.controlKeys[2])) ch = 'j';
+            else if (ch.Equals(Settings.controlKeys[3])) ch = 'u';
+            else if (ch.Equals(Settings.controlKeys[4])) ch = 'q';
+            else return;
 
             switch (ch)
             {
-                case ('k'):
-                    if (Move.CheckRight(GameFild)) Move.MoveRight(GameFild);
-                    break;
                 case ('h'):
                     if (Move.CheckLeft(GameFild)) Move.MoveLeft(GameFild);
+                    break;
+                case ('k'):
+                    if (Move.CheckRight(GameFild)) Move.MoveRight(GameFild);
                     break;
                 case ('j'):
                     if (Move.CheckDowd(GameFild))
@@ -34,6 +40,7 @@ namespace TETRISV1
                     Score = 0;
                     Console.ResetColor();
                     Console.CursorVisible = true;
+                    Save.SeveGame();
                     break;
             }
         }

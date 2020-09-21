@@ -6,9 +6,9 @@ namespace TETRISV1
     {
         public static void ColorPrintDisplay(Fild fg)
         {
-            Move.PrintFig(fg);
+            Move.SetFigForm(fg);
             System.Console.CursorTop = 0; Console.CursorLeft = 0;
-            Console.BackgroundColor = Setting.ConsColBackground;
+            Console.BackgroundColor = Settings.ConsColBackground;
             //Console.ForegroundColor = Setting.ConsColBrick;
             for (int i = 0; i < fg.FildGame.GetLength(0); i++)
             {
@@ -23,14 +23,14 @@ namespace TETRISV1
                 }
                 System.Console.WriteLine();
             }
-            Move.DeleteFig(fg);
+            Move.TakeOutFigForm(fg);
 
 
             // print Score
             Console.CursorTop = 0;
             Console.CursorLeft = 2 * fg.FildGame.GetLength(1) + 3;
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.BackgroundColor = Setting.ConsColBackground;
+            Console.BackgroundColor = Settings.ConsColBackground;
             System.Console.WriteLine(String.Format($"{Control.Score,10}"));
 
             // clear place for view NextFig
@@ -39,14 +39,14 @@ namespace TETRISV1
             {
                 ClearLine();
                 for (int j = 0; j < fg.FigNext.Form.GetLength(1); j++)
-                    if (fg.FigNext.Form[i, j] == Setting.keyBuild)
+                    if (fg.FigNext.Form[i, j] == Settings.keyBuild)
                     {
                         Console.BackgroundColor = fg.FigNext.FigureColor;
                         System.Console.Write("  ");
                     }
                     else
                     {
-                        Console.BackgroundColor = Setting.ConsColBackground;
+                        Console.BackgroundColor = Settings.ConsColBackground;
                         Console.Write("  ");
                     }
             }
@@ -57,7 +57,7 @@ namespace TETRISV1
             else if (fg.FigNext.Form.GetLength(0) < 4) ClearLine();
             void ClearLine()
             {
-                Console.BackgroundColor = Setting.ConsColBackground;
+                Console.BackgroundColor = Settings.ConsColBackground;
                 System.Console.WriteLine();
                 Console.CursorLeft = 2 * fg.FildGame.GetLength(1) + 3;
                 System.Console.Write($"        ");
@@ -67,7 +67,7 @@ namespace TETRISV1
             // Task
             System.Console.WriteLine();
             System.Console.WriteLine();
-            Console.BackgroundColor = Setting.ConsColBackground;
+            Console.BackgroundColor = Settings.ConsColBackground;
             Console.CursorLeft = 2 * fg.FildGame.GetLength(1) + 3;
             System.Console.Write("Q: quit.");
 
@@ -93,7 +93,7 @@ namespace TETRISV1
         }
         public void ClearUpLine(int y, int x)
         {
-            FildColorArray[y, x] = Setting.ConsColBackground;
+            FildColorArray[y, x] = Settings.ConsColBackground;
         }
 
         public FildColor(Fild fg)
@@ -103,7 +103,7 @@ namespace TETRISV1
             {
                 for (int x = 0; x < fg.FildGame.GetLength(1); x++)
                 {
-                    FildColorArray[y, x] = Setting.ConsColBackground;
+                    FildColorArray[y, x] = Settings.ConsColBackground;
                 }
 
             }

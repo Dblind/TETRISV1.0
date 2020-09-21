@@ -11,7 +11,7 @@ namespace TETRISV1
         public DisplayVariable DisplayType;
         public DelegFallWallColor FallWallColorScreen;
         public DelegFallWallColor ClearUpLine;
-        public char[,] FildGame = new char[,] { { Setting.background } };
+        public char[,] FildGame = new char[,] { { Settings.background } };
         public FildColor FCScreen;// = new FildColor(GameFild);
 
         public  bool RunGame = true;
@@ -28,7 +28,7 @@ namespace TETRISV1
             {
                 for (int j = 0; j < FildGame.GetLength(1); j++)
                 {
-                    FildGame[i, j] = Setting.background;
+                    FildGame[i, j] = Settings.background;
                 }
             }
             numberNextFig = rand.Next(1, 8);
@@ -111,10 +111,10 @@ namespace TETRISV1
     {
         public static void PrintCharScreen(Fild fg)
         {
-            Move.PrintFig(fg);
+            Move.SetFigForm(fg);
             System.Console.CursorTop = 0; Console.CursorLeft = 0;
-            Console.BackgroundColor = Setting.ConsColBackground;
-            Console.ForegroundColor = Setting.ConsColBrick;
+            Console.BackgroundColor = Settings.ConsColBackground;
+            Console.ForegroundColor = Settings.ConsColBrick;
             for (int i = 0; i < fg.FildGame.GetLength(0); i++)
             {
                 for (int j = 0; j < fg.FildGame.GetLength(1); j++)
@@ -123,7 +123,7 @@ namespace TETRISV1
                 }
                 System.Console.WriteLine();
             }
-            Move.DeleteFig(fg);
+            Move.TakeOutFigForm(fg);
 
             // print Score
             Console.CursorTop = 0;
@@ -148,7 +148,7 @@ namespace TETRISV1
             {
                 System.Console.WriteLine();
                 Console.CursorLeft = fg.FildGame.GetLength(1) + 3;
-                System.Console.Write($"{Setting.background}{Setting.background}{ Setting.background}{ Setting.background}");
+                System.Console.Write($"{Settings.background}{Settings.background}{ Settings.background}{ Settings.background}");
                 Console.CursorLeft = fg.FildGame.GetLength(1) + 3;
             }
 

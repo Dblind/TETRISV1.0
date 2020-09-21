@@ -19,11 +19,11 @@ namespace TETRISV1
         public ConsoleColor FigureColor { get; set; }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
-                        {Setting.keyBuild},    // +
-                        {Setting.keyBuild}};   // +
+                        {Settings.keyBuild},    // +
+                        {Settings.keyBuild}};   // +
         char[,] Form_2 = new char[,] {
-                        {Setting.background,Setting.background},  // ..
-                        {Setting.keyBuild,Setting.keyBuild}};     // ++
+                        {Settings.background,Settings.background},  // ..
+                        {Settings.keyBuild,Settings.keyBuild}};     // ++
 
 
         public int Next()
@@ -60,17 +60,17 @@ namespace TETRISV1
                     }
                     break;
                 case (1):
-                    Move.DeleteFig(fg);
+                    Move.TakeOutFigForm(fg);
                     bool flag2 = true, strf = false;
                     strf = Move.dotMove[1] == fg.FildGame.GetLength(1) - 1 ||
-                        (fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 1] == Setting.keyBuild &&
+                        (fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 1] == Settings.keyBuild &&
                         Move.dotMove[1] != 0);
                     if (strf) Move.dotMove[1]--;
                     for (int i = 0; i < Form_2.GetLength(0); i++)
                     {
                         for (int j = 0; j < Form_2.GetLength(1); j++)
                         {
-                            if (Form_2[i, j] == Setting.keyBuild)
+                            if (Form_2[i, j] == Settings.keyBuild)
                                 if (Form_2[i, j] == fg.FildGame[i + Move.dotMove[0], j + Move.dotMove[1]])
                                 {
                                     flag2 = false; break;
@@ -81,11 +81,11 @@ namespace TETRISV1
                     if (!flag2)
                     {
                         if (strf) Move.dotMove[1]++;
-                        Move.PrintFig(fg);
+                        Move.SetFigForm(fg);
                     }
                     else
                     {
-                        Form = Form_2; rollCount = Next(); Move.PrintFig(fg);
+                        Form = Form_2; rollCount = Next(); Move.SetFigForm(fg);
                     }
                     break;
             }
@@ -94,19 +94,23 @@ namespace TETRISV1
     class LineFigure : IFigures
     {
         public ConsoleColor FigureColor { get; set; }
-        public LineFigure() { FigureColor = Setting.FigColor[5]; }
+        public LineFigure()
+        {
+            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
+            else FigureColor = Settings.FigColor[5];
+        }
         int rollCount = 1;
         char[,] Form_0 = new char[,] {
-                        {Setting.keyBuild,Setting.keyBuild,Setting.keyBuild,Setting.keyBuild}};
+                        {Settings.keyBuild,Settings.keyBuild,Settings.keyBuild,Settings.keyBuild}};
         // ....
         // ....
         // ++++
         // ....
         char[,] Form_1 = new char[,] {
-                        {Setting.keyBuild},    // .+..
-                        {Setting.keyBuild},    // .+..
-                        {Setting.keyBuild},    // .+.+
-                        {Setting.keyBuild}};   // .+..
+                        {Settings.keyBuild},    // .+..
+                        {Settings.keyBuild},    // .+..
+                        {Settings.keyBuild},    // .+.+
+                        {Settings.keyBuild}};   // .+..
 
         public int Next() => rollCount > 0 ? 0 : 1;
         public char[,] Form { get; set; }
@@ -124,13 +128,13 @@ namespace TETRISV1
                     if (0 < Move.dotMove[1]) flagOut0 = 0b10000;
                     if (fg.FildGame.GetLength(1) - 2 > Move.dotMove[1]) flagOut0 |= 0b01000;//  9 - 2 (7) > 6 
                     if (Move.dotMove[1] > 0 &&
-                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] - 1] == Setting.keyBuild)
+                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] - 1] == Settings.keyBuild)
                         flagOut0 |= 0b00100;    // left block
                     if (Move.dotMove[1] < fg.FildGame.GetLength(1) - 1 &&
-                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 1] == Setting.keyBuild)
+                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 1] == Settings.keyBuild)
                         flagOut0 |= 0b00010;    // right block +1
                     if (Move.dotMove[1] < fg.FildGame.GetLength(1) - 2 &&
-                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == Setting.keyBuild)
+                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == Settings.keyBuild)
                         flagOut0 |= 0b00001;    // right block +2
 
                     if (Move.dotMove[1] == 0 || (flagOut0 & 0b11100) == 0b11100)    // zero, left
@@ -179,8 +183,8 @@ namespace TETRISV1
     static class Angle
     {
         public static char[,] Form = new char[,] {
-                {' ', Setting.keyBuild,' '},
-                {Setting.keyBuild, Setting.keyBuild,Setting.keyBuild} };
+                {' ', Settings.keyBuild,' '},
+                {Settings.keyBuild, Settings.keyBuild,Settings.keyBuild} };
     }
     class SFigure : IFigures
     {
@@ -190,15 +194,19 @@ namespace TETRISV1
         //  -+ ++-  -+-
 
         public ConsoleColor FigureColor { get; set; }
-        public SFigure() { FigureColor = Setting.FigColor[0]; }
+        public SFigure()
+        {
+            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
+            else FigureColor = Settings.FigColor[0];
+        }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
-                        {Setting.keyBuild, Setting.background},
-                        {Setting.keyBuild,Setting.keyBuild},
-                        {Setting.background,Setting.keyBuild}};
+                        {Settings.keyBuild, Settings.background},
+                        {Settings.keyBuild,Settings.keyBuild},
+                        {Settings.background,Settings.keyBuild}};
         char[,] Form_1 = new char[,] {
-                        {Setting.background,Setting.keyBuild,Setting.keyBuild},
-                        {Setting.keyBuild,Setting.keyBuild,Setting.background}};
+                        {Settings.background,Settings.keyBuild,Settings.keyBuild},
+                        {Settings.keyBuild,Settings.keyBuild,Settings.background}};
         public int Next()
         {
             if (rollCount < 1) return rollCount + 1;
@@ -219,7 +227,7 @@ namespace TETRISV1
                 case (1):
                     bool flagOut1 = false;
                     if (Move.dotMove[1] + fg.FigNow.Form.GetLength(1) == fg.FildGame.GetLength(1) ||
-                    fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == Setting.keyBuild)
+                    fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == Settings.keyBuild)
                     { Move.dotMove[0]++; Move.dotMove[1]--; flagOut1 = true; }
                     else Move.dotMove[0]++;
                     if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
@@ -233,15 +241,19 @@ namespace TETRISV1
     class ReversSFigure : IFigures
     {
         public ConsoleColor FigureColor { get; set; }
-        public ReversSFigure() { FigureColor = Setting.FigColor[1]; }
+        public ReversSFigure()
+        {
+            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
+            else FigureColor = Settings.FigColor[1];
+        }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
-                        {Setting.background, Setting.keyBuild},    // -+  
-                        {Setting.keyBuild, Setting.keyBuild},      // ++  ++-
-                        {Setting.keyBuild, Setting.background}};   // +-  -++
+                        {Settings.background, Settings.keyBuild},    // -+  
+                        {Settings.keyBuild, Settings.keyBuild},      // ++  ++-
+                        {Settings.keyBuild, Settings.background}};   // +-  -++
         char[,] Form_1 = new char[,] {
-                        {Setting.keyBuild, Setting.keyBuild, Setting.background},
-                        {Setting.background, Setting.keyBuild, Setting.keyBuild}};
+                        {Settings.keyBuild, Settings.keyBuild, Settings.background},
+                        {Settings.background, Settings.keyBuild, Settings.keyBuild}};
         public int Next()
         {
             if (rollCount < 1) return rollCount + 1;
@@ -263,7 +275,7 @@ namespace TETRISV1
                 case (1):
                     bool flagOut1 = false;
                     if (Move.dotMove[1] == 0 ||
-                        fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] - 1] == Setting.keyBuild)
+                        fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] - 1] == Settings.keyBuild)
                     { Move.dotMove[0]++; flagOut1 = true; }
                     else { Move.dotMove[0]++; Move.dotMove[1]--; }
                     if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
@@ -276,13 +288,17 @@ namespace TETRISV1
     class CubeFigure : IFigures
     {
         public ConsoleColor FigureColor { get; set; }
-        public CubeFigure() { FigureColor = Setting.FigColor[4]; }
+        public CubeFigure()
+        {
+            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
+            else FigureColor = Settings.FigColor[4];
+        }
         public int Next() { return 0; }
         public void RestorForm()
         {
             Form = new char[,] {
-                        {Setting.keyBuild,Setting.keyBuild},
-                        {Setting.keyBuild,Setting.keyBuild}};
+                        {Settings.keyBuild,Settings.keyBuild},
+                        {Settings.keyBuild,Settings.keyBuild}};
         }
         public void Roll(Fild fg) { }
         public void RollPosition(int rc, Fild fg) { }
@@ -292,22 +308,26 @@ namespace TETRISV1
     class LFigure : IFigures
     {
         public ConsoleColor FigureColor { get; set; }
-        public LFigure() { FigureColor = Setting.FigColor[2]; }
+        public LFigure()
+        {
+            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
+            else FigureColor = Settings.FigColor[2];
+        }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
-                        {Setting.keyBuild,Setting.background},    // +.
-                        {Setting.keyBuild,Setting.background},    // +.
-                        {Setting.keyBuild,Setting.keyBuild}};     // ++
+                        {Settings.keyBuild,Settings.background},    // +.
+                        {Settings.keyBuild,Settings.background},    // +.
+                        {Settings.keyBuild,Settings.keyBuild}};     // ++
         char[,] Form_1 = new char[,] {
-                        {Setting.keyBuild,Setting.keyBuild,Setting.keyBuild},        // +++
-                        {Setting.keyBuild,Setting.background,Setting.background}};   // +..
+                        {Settings.keyBuild,Settings.keyBuild,Settings.keyBuild},        // +++
+                        {Settings.keyBuild,Settings.background,Settings.background}};   // +..
         char[,] Form_2 = new char[,] {
-                        {Setting.keyBuild,Setting.keyBuild},      // ++9#
-                        {Setting.background,Setting.keyBuild},    // .+89
-                        {Setting.background,Setting.keyBuild}};   // .+..#
+                        {Settings.keyBuild,Settings.keyBuild},      // ++9#
+                        {Settings.background,Settings.keyBuild},    // .+89
+                        {Settings.background,Settings.keyBuild}};   // .+..#
         char[,] Form_3 = new char[,] {
-                        {Setting.background,Setting.background,Setting.keyBuild},    // ..+
-                        {Setting.keyBuild,Setting.keyBuild,Setting.keyBuild}};       // +++
+                        {Settings.background,Settings.background,Settings.keyBuild},    // ..+
+                        {Settings.keyBuild,Settings.keyBuild,Settings.keyBuild}};       // +++
         public int Next()
         {
             if (rollCount < 3) return rollCount + 1;
@@ -321,8 +341,8 @@ namespace TETRISV1
             switch (rc)
             {
                 case (0):
-                    if (fg.FildGame[Move.dotMove[0], Move.dotMove[1]] == Setting.keyBuild &&
-                        fg.FildGame[Move.dotMove[0] - 1, Move.dotMove[1]] == Setting.keyBuild)
+                    if (fg.FildGame[Move.dotMove[0], Move.dotMove[1]] == Settings.keyBuild &&
+                        fg.FildGame[Move.dotMove[0] - 1, Move.dotMove[1]] == Settings.keyBuild)
                     {
                         Move.dotMove[0]--; Move.dotMove[1]++;
                         if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
@@ -336,14 +356,14 @@ namespace TETRISV1
                     }
                     break;
                 case (1):
-                    if (fg.FildGame[Move.dotMove[0], Move.dotMove[1] + 1] == Setting.keyBuild && Move.dotMove[1] > 1)
+                    if (fg.FildGame[Move.dotMove[0], Move.dotMove[1] + 1] == Settings.keyBuild && Move.dotMove[1] > 1)
                     {
                         Move.dotMove[1] -= 2;
                         if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
                         else Move.dotMove[1] += 2;
                     }
                     else if (((Move.dotMove[1] < fg.FildGame.GetLength(1) - 2) &&
-                            fg.FildGame[Move.dotMove[0], Move.dotMove[1] + 2] == Setting.keyBuild && Move.dotMove[1] > 0) ||
+                            fg.FildGame[Move.dotMove[0], Move.dotMove[1] + 2] == Settings.keyBuild && Move.dotMove[1] > 0) ||
                              Move.dotMove[1] > fg.FildGame.GetLength(1) - 3)
                     {
                         Move.dotMove[1] -= 1;
@@ -357,16 +377,16 @@ namespace TETRISV1
                     break;
                 case (2):
                     if (Move.dotMove[1] > 0 && Move.dotMove[0] < fg.FildGame.GetLength(0) - 2 &&        // +++
-                        (fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 1] == Setting.keyBuild ||   // +*.
-                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 1] == Setting.keyBuild))     // .*.
+                        (fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 1] == Settings.keyBuild ||   // +*.
+                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 1] == Settings.keyBuild))     // .*.
                     {
                         Move.dotMove[1]--;
                         if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = Next(); }
                         else { Move.dotMove[1]++; }
                     }
                     else if (Move.dotMove[0] < fg.FildGame.GetLength(0) - 2 &&                              // +++
-                            (fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == Setting.keyBuild ||   // +.*
-                            fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == Setting.keyBuild))     // ..*
+                            (fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == Settings.keyBuild ||   // +.*
+                            fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == Settings.keyBuild))     // ..*
                     {
                         if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = Next(); }
                     }
@@ -386,14 +406,14 @@ namespace TETRISV1
                     break;
                 case (3):
                     if (Move.dotMove[1] < fg.FildGame.GetLength(1) - 3 &&
-                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1]] == Setting.keyBuild)
+                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1]] == Settings.keyBuild)
                     {
                         Move.dotMove[0]++; Move.dotMove[1]++;
                         if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
                         else { Move.dotMove[0]--; Move.dotMove[1]--; }
                     }
                     else if ((Move.dotMove[1] < fg.FildGame.GetLength(1) - 2 && Move.dotMove[1] > 0 &&
-                         fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] - 1] == Setting.keyBuild) ||
+                         fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] - 1] == Settings.keyBuild) ||
                          Move.dotMove[1] == 0)
                     {
                         Move.dotMove[0]++;
@@ -415,19 +435,19 @@ namespace TETRISV1
         public ConsoleColor FigureColor { get; set; }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
-                        {Setting.keyBuild,Setting.background},    // +.
-                        {Setting.keyBuild,Setting.background},    // +.
-                        {Setting.keyBuild,Setting.keyBuild}};     // ++
+                        {Settings.keyBuild,Settings.background},    // +.
+                        {Settings.keyBuild,Settings.background},    // +.
+                        {Settings.keyBuild,Settings.keyBuild}};     // ++
         char[,] Form_1 = new char[,] {
-                        {Setting.keyBuild,Setting.keyBuild,Setting.keyBuild},        // +++
-                        {Setting.keyBuild,Setting.background,Setting.background}};   // +..
+                        {Settings.keyBuild,Settings.keyBuild,Settings.keyBuild},        // +++
+                        {Settings.keyBuild,Settings.background,Settings.background}};   // +..
         char[,] Form_2 = new char[,] {
-                        {Setting.keyBuild,Setting.keyBuild},      // ++9#
-                        {Setting.background,Setting.keyBuild},    // .+89
-                        {Setting.background,Setting.keyBuild}};   // .+..#
+                        {Settings.keyBuild,Settings.keyBuild},      // ++9#
+                        {Settings.background,Settings.keyBuild},    // .+89
+                        {Settings.background,Settings.keyBuild}};   // .+..#
         char[,] Form_3 = new char[,] {
-                        {Setting.background,Setting.background,Setting.keyBuild},    // ..+
-                        {Setting.keyBuild,Setting.keyBuild,Setting.keyBuild}};       // +++
+                        {Settings.background,Settings.background,Settings.keyBuild},    // ..+
+                        {Settings.keyBuild,Settings.keyBuild,Settings.keyBuild}};       // +++
         public int Next()
         {
             if (rollCount < 3) return rollCount + 1;
@@ -449,7 +469,7 @@ namespace TETRISV1
                 case (1):
                     bool flagOut1 = false;
                     if ((Move.dotMove[1] > fg.FildGame.GetLength(1) - 3) ||
-                        fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == Setting.keyBuild)
+                        fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == Settings.keyBuild)
                     { Move.dotMove[0]++; Move.dotMove[1]--; flagOut1 = true; }
                     else Move.dotMove[0]++;
                     if (SupportMethods.Intersection(Form_1, fg))
@@ -463,7 +483,7 @@ namespace TETRISV1
                 case (2):
                     bool flagOut2 = false;
                     if (Move.dotMove[0] + fg.FigNow.Form.GetLength(0) == fg.FildGame.GetLength(0) ||
-                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 1] == Setting.keyBuild)
+                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 1] == Settings.keyBuild)
                     { Move.dotMove[0]--; flagOut2 = true; }
                     if (SupportMethods.Intersection(Form_2, fg))
                     { Form = Form_2; rollCount = Next(); }
@@ -471,7 +491,7 @@ namespace TETRISV1
                     break;
                 case (3):
                     bool flagOut3 = false;
-                    if (Move.dotMove[1] == 0 || fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] - 1] == Setting.keyBuild)
+                    if (Move.dotMove[1] == 0 || fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] - 1] == Settings.keyBuild)
                         flagOut3 = true;
                     else Move.dotMove[1]--;
                     if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
@@ -483,22 +503,26 @@ namespace TETRISV1
     class ReversLFigure : IFigures
     {
         public ConsoleColor FigureColor { get; set; }
-        public ReversLFigure() { FigureColor = Setting.FigColor[3]; }
+        public ReversLFigure()
+        {
+            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
+            else FigureColor = Settings.FigColor[3];
+        }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
-                        {Setting.background,Setting.keyBuild},    // .+
-                        {Setting.background,Setting.keyBuild},    // .+
-                        {Setting.keyBuild,Setting.keyBuild}};     // ++
+                        {Settings.background,Settings.keyBuild},    // .+
+                        {Settings.background,Settings.keyBuild},    // .+
+                        {Settings.keyBuild,Settings.keyBuild}};     // ++
         char[,] Form_1 = new char[,] {
-                        {Setting.keyBuild,Setting.background,Setting.background},    // +..
-                        {Setting.keyBuild,Setting.keyBuild,Setting.keyBuild}};       // +++
+                        {Settings.keyBuild,Settings.background,Settings.background},    // +..
+                        {Settings.keyBuild,Settings.keyBuild,Settings.keyBuild}};       // +++
         char[,] Form_2 = new char[,] {
-                        {Setting.keyBuild,Setting.keyBuild},      // ++
-                        {Setting.keyBuild,Setting.background},    // +.
-                        {Setting.keyBuild,Setting.background}};   // +.
+                        {Settings.keyBuild,Settings.keyBuild},      // ++
+                        {Settings.keyBuild,Settings.background},    // +.
+                        {Settings.keyBuild,Settings.background}};   // +.
         char[,] Form_3 = new char[,] {                                               // .*.
-                        {Setting.keyBuild,Setting.keyBuild,Setting.keyBuild},        // +++
-                        {Setting.background,Setting.background,Setting.keyBuild}};   // .*+
+                        {Settings.keyBuild,Settings.keyBuild,Settings.keyBuild},        // +++
+                        {Settings.background,Settings.background,Settings.keyBuild}};   // .*+
         public int Next()
         {
             if (rollCount < 3) return rollCount + 1;
@@ -513,8 +537,8 @@ namespace TETRISV1
             {
                 case (0):
                     if (Move.dotMove[0] < fg.FildGame.GetLength(0) - 2 &&
-                        (fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 1] == Setting.keyBuild ||
-                         fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == Setting.keyBuild))
+                        (fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 1] == Settings.keyBuild ||
+                         fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == Settings.keyBuild))
                     {
                         Move.dotMove[0]--; Move.dotMove[1]++;
                         if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
@@ -541,8 +565,8 @@ namespace TETRISV1
                         else { Move.dotMove[0]--; }
                     }
                     else if (Move.dotMove[1] < fg.FildGame.GetLength(1) - 2 &&       // offset right
-                     (fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] - 1] == Setting.keyBuild ||
-                     fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] - 1] == Setting.keyBuild))
+                     (fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] - 1] == Settings.keyBuild ||
+                     fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] - 1] == Settings.keyBuild))
                     {
                         Move.dotMove[0]++;
                         if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
@@ -562,7 +586,7 @@ namespace TETRISV1
                     break;
                 case (3):
                     if (Move.dotMove[1] == fg.FildGame.GetLength(1) - 2 &&
-                         fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 1] == Setting.keyBuild)
+                         fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 1] == Settings.keyBuild)
                     {
                         Move.dotMove[0] -= 2;
                         if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
@@ -575,8 +599,8 @@ namespace TETRISV1
                         else { Move.dotMove[1]++; }
                     }
                     else if (Move.dotMove[1] > 0 && Move.dotMove[1] < fg.FildGame.GetLength(1) - 2 &&
-                        (fg.FildGame[Move.dotMove[0], Move.dotMove[1] + 2] == Setting.keyBuild ||
-                         fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == Setting.keyBuild))
+                        (fg.FildGame[Move.dotMove[0], Move.dotMove[1] + 2] == Settings.keyBuild ||
+                         fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == Settings.keyBuild))
                     {
                         Move.dotMove[1]--;
                         if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
@@ -593,19 +617,19 @@ namespace TETRISV1
         public ConsoleColor FigureColor { get; set; }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
-                        {Setting.background,Setting.keyBuild},    // .+
-                        {Setting.background,Setting.keyBuild},    // .+
-                        {Setting.keyBuild,Setting.keyBuild}};     // ++
+                        {Settings.background,Settings.keyBuild},    // .+
+                        {Settings.background,Settings.keyBuild},    // .+
+                        {Settings.keyBuild,Settings.keyBuild}};     // ++
         char[,] Form_1 = new char[,] {
-                        {Setting.keyBuild,Setting.background,Setting.background},    // +..
-                        {Setting.keyBuild,Setting.keyBuild,Setting.keyBuild}};       // +++
+                        {Settings.keyBuild,Settings.background,Settings.background},    // +..
+                        {Settings.keyBuild,Settings.keyBuild,Settings.keyBuild}};       // +++
         char[,] Form_2 = new char[,] {
-                        {Setting.keyBuild,Setting.keyBuild},      // ++
-                        {Setting.keyBuild,Setting.background},    // +.
-                        {Setting.keyBuild,Setting.background}};   // +.
+                        {Settings.keyBuild,Settings.keyBuild},      // ++
+                        {Settings.keyBuild,Settings.background},    // +.
+                        {Settings.keyBuild,Settings.background}};   // +.
         char[,] Form_3 = new char[,] {                                      // .*.
-                        {Setting.keyBuild,Setting.keyBuild,Setting.keyBuild},        // +++
-                        {Setting.background,Setting.background,Setting.keyBuild}};   // .*+
+                        {Settings.keyBuild,Settings.keyBuild,Settings.keyBuild},        // +++
+                        {Settings.background,Settings.background,Settings.keyBuild}};   // .*+
         public int Next()
         {
             if (rollCount < 3) return rollCount + 1;
@@ -626,7 +650,7 @@ namespace TETRISV1
                 case (1):
                     bool flagOut1 = false;
                     if ((Move.dotMove[1] > fg.FildGame.GetLength(1) - 3) ||
-                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == Setting.keyBuild)
+                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == Settings.keyBuild)
                     { Move.dotMove[0]++; Move.dotMove[1]--; flagOut1 = true; }
                     else Move.dotMove[0]++;
                     if (SupportMethods.Intersection(Form_1, fg))
@@ -640,7 +664,7 @@ namespace TETRISV1
                 case (2):
                     bool flagOut2 = false;
                     if (Move.dotMove[0] + fg.FigNow.Form.GetLength(0) == fg.FildGame.GetLength(0) ||
-                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1]] == Setting.keyBuild)
+                        fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1]] == Settings.keyBuild)
                     { Move.dotMove[0]--; flagOut2 = true; }
                     if (SupportMethods.Intersection(Form_2, fg))
                     { Form = Form_2; rollCount = Next(); }
@@ -648,7 +672,7 @@ namespace TETRISV1
                     break;
                 case (3):
                     bool flagOut3 = false;
-                    if (Move.dotMove[1] == 0 || fg.FildGame[Move.dotMove[0], Move.dotMove[1] - 1] == Setting.keyBuild) flagOut3 = true;
+                    if (Move.dotMove[1] == 0 || fg.FildGame[Move.dotMove[0], Move.dotMove[1] - 1] == Settings.keyBuild) flagOut3 = true;
                     else Move.dotMove[1]--;
                     if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
                     else if (!flagOut3) Move.dotMove[1]++;
@@ -661,23 +685,27 @@ namespace TETRISV1
     class TFigure : IFigures
     {
         public ConsoleColor FigureColor { get; set; }
-        public TFigure() { FigureColor = Setting.FigColor[6]; }
+        public TFigure()
+        {
+            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
+            else FigureColor = Settings.FigColor[6];
+        }
         int rollCount = 0;
         char[,] Form_0 = new char[,] {
-                        {Setting.background,Setting.background,Setting.background},  // ...
-                        {Setting.keyBuild,Setting.keyBuild,Setting.keyBuild},        // +++
-                        {Setting.background,Setting.keyBuild,Setting.background}};   // .+.
+                        {Settings.background,Settings.background,Settings.background},  // ...
+                        {Settings.keyBuild,Settings.keyBuild,Settings.keyBuild},        // +++
+                        {Settings.background,Settings.keyBuild,Settings.background}};   // .+.
         char[,] Form_1 = new char[,] {
-                        {Setting.background,Setting.keyBuild},    // .+
-                        {Setting.keyBuild,Setting.keyBuild},      // ++
-                        {Setting.background,Setting.keyBuild}};   // .+
+                        {Settings.background,Settings.keyBuild},    // .+
+                        {Settings.keyBuild,Settings.keyBuild},      // ++
+                        {Settings.background,Settings.keyBuild}};   // .+
         char[,] Form_2 = new char[,] {
-                        {Setting.background,Setting.keyBuild,Setting.background},    // .+.
-                        {Setting.keyBuild,Setting.keyBuild,Setting.keyBuild}};       // +++
+                        {Settings.background,Settings.keyBuild,Settings.background},    // .+.
+                        {Settings.keyBuild,Settings.keyBuild,Settings.keyBuild}};       // +++
         char[,] Form_3 = new char[,] {
-                        {Setting.keyBuild,Setting.background},    // +.
-                        {Setting.keyBuild,Setting.keyBuild},      // ++
-                        {Setting.keyBuild,Setting.background}};   // +.
+                        {Settings.keyBuild,Settings.background},    // +.
+                        {Settings.keyBuild,Settings.keyBuild},      // ++
+                        {Settings.keyBuild,Settings.background}};   // +.
         public int Next() => rollCount < 3 ? rollCount + 1 : 0;
         public char[,] Form { get; set; }
         public void RestorForm() => Form = Form_0;
@@ -689,7 +717,7 @@ namespace TETRISV1
                 case (0):
                     bool flagOut0 = false;
                     if (Move.dotMove[1] == 0 ||
-                        fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] - 1] == Setting.keyBuild)
+                        fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] - 1] == Settings.keyBuild)
                         flagOut0 = true;
                     else Move.dotMove[1]--;
                     if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
@@ -701,7 +729,7 @@ namespace TETRISV1
                 case (2):
                     bool flagOut2 = false;
                     if (Move.dotMove[1] + 3 > fg.FildGame.GetLength(1) ||
-                        fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == Setting.keyBuild)
+                        fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == Settings.keyBuild)
                     { Move.dotMove[1]--; flagOut2 = true; }
                     if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = Next(); }
                     else { if (flagOut2) Move.dotMove[1]++; }
@@ -727,8 +755,8 @@ namespace TETRISV1
             {
                 for (int j = 0; j < form_x.GetLength(1); j++)
                 {
-                    if ((form_x[i, j] == Setting.keyBuild) &&
-                        Setting.keyBuild == fg.FildGame[i + Move.dotMove[0], j + Move.dotMove[1]])
+                    if ((form_x[i, j] == Settings.keyBuild) &&
+                        Settings.keyBuild == fg.FildGame[i + Move.dotMove[0], j + Move.dotMove[1]])
                     {
                         flag = false; break;
                     }

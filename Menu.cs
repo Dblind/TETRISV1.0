@@ -35,7 +35,7 @@ namespace TETRISV1
                     System.Console.WriteLine("1 New Game");
                     System.Console.WriteLine("2 Save game");
                     System.Console.WriteLine("3 Load game");
-                    System.Console.WriteLine("4 Setting");
+                    System.Console.WriteLine("4 Settings");
                     System.Console.WriteLine();
                     System.Console.WriteLine("0 Exit");
                     Menu.MainMenu.MainMenuHandler(ReturnKey());
@@ -50,7 +50,7 @@ namespace TETRISV1
                         //Fild.RunGame = true;
                         break;
                     case (4):
-                        SettingsMenu.Setting();
+                        SettingsMenu.Settings();
                         break;
                     case (0):
                         RunNewGame.RunGameFlag = isEnd = false;
@@ -69,28 +69,29 @@ namespace TETRISV1
         class SettingsMenu
         {
             static bool isEnd = true;
-            public static void Setting()
+            public static void Settings()
             {
                 isEnd = true;
                 do
                 {
                     Console.Clear();
-                    // System.Console.WriteLine($"1 Char block: {Setting.keyBuild}");
-                    // System.Console.WriteLine($"2 Block color: {Setting.ConsColBrick}");
-                    // System.Console.WriteLine($"3 Char background: {Setting.background}");
-                    // System.Console.WriteLine($"4 Background color: {Setting.ConsColBackground}");
-                    // System.Console.WriteLine($"5 Widht: {Setting.FildWidth}");
-                    // System.Console.WriteLine($"6 Height: {Setting.FildHeight}");
-                    // System.Console.WriteLine($"7 Speed: {Setting.Speed}");
+                    // System.Console.WriteLine($"1 Char block: {Settings.keyBuild}");
+                    // System.Console.WriteLine($"2 Block color: {Settings.ConsColBrick}");
+                    // System.Console.WriteLine($"3 Char background: {Settings.background}");
+                    // System.Console.WriteLine($"4 Background color: {Settings.ConsColBackground}");
+                    // System.Console.WriteLine($"5 Widht: {Settings.FildWidth}");
+                    // System.Console.WriteLine($"6 Height: {Settings.FildHeight}");
+                    // System.Console.WriteLine($"7 Speed: {Settings.Speed}");
                     // System.Console.WriteLine("8 Back");
-                    // System.Console.WriteLine($"9 Color Type: {Setting.ColorScreen}");
+                    // System.Console.WriteLine($"9 Color Type: {Settings.ColorScreen}");
                     System.Console.WriteLine($"1 Video Option");
                     System.Console.WriteLine($"2 Game option");
+                    System.Console.WriteLine($"3 Control option");
                     System.Console.WriteLine("\n\n\n8 Back");
-                    SettingHandler(ReturnKey());
+                    SettingsHandler(ReturnKey());
                 } while (isEnd);
             }
-            static void SettingHandler(int v)
+            static void SettingsHandler(int v)
             {
                 #region OldHandler
 
@@ -99,13 +100,13 @@ namespace TETRISV1
 
                     case (1):
                         System.Console.Write("Change new Key: ");
-                        Setting.keyBuild = Console.ReadKey().KeyChar;
-                        //MainMenuSetting();
+                        Settings.keyBuild = Console.ReadKey().KeyChar;
+                        //MainMenuSettings();
                         break;
                     case (3):
                         System.Console.Write("Change new Key: ");
-                        Setting.background = Console.ReadKey().KeyChar;
-                        //MainMenuSetting();
+                        Settings.background = Console.ReadKey().KeyChar;
+                        //MainMenuSettings();
                         break;
                     case (2):
                         Console.Clear();
@@ -119,25 +120,25 @@ namespace TETRISV1
                         switch (ReturnKey())
                         {
                             case (1):
-                                Setting.ConsColBrick = ConsoleColor.Red;
+                                Settings.ConsColBrick = ConsoleColor.Red;
                                 break;
                             case (2):
-                                Setting.ConsColBrick = ConsoleColor.Blue;
+                                Settings.ConsColBrick = ConsoleColor.Blue;
                                 break;
                             case (3):
-                                Setting.ConsColBrick = ConsoleColor.Green;
+                                Settings.ConsColBrick = ConsoleColor.Green;
                                 break;
                             case (4):
-                                Setting.ConsColBrick = ConsoleColor.White;
+                                Settings.ConsColBrick = ConsoleColor.White;
                                 break;
                             case (5):
-                                Setting.ConsColBrick = ConsoleColor.Black;
+                                Settings.ConsColBrick = ConsoleColor.Black;
                                 break;
                             case (6):
-                                Setting.ConsColBrick = ConsoleColor.Cyan;
+                                Settings.ConsColBrick = ConsoleColor.Cyan;
                                 break;
                         }
-                        //MainMenuSetting();
+                        //MainMenuSettings();
                         break;
                     case (4):
                         Console.Clear();
@@ -150,60 +151,60 @@ namespace TETRISV1
                         switch (ReturnKey())
                         {
                             case (1):
-                                Setting.ConsColBackground = ConsoleColor.Red;
+                                Settings.ConsColBackground = ConsoleColor.Red;
                                 break;
                             case (2):
-                                Setting.ConsColBackground = ConsoleColor.Blue;
+                                Settings.ConsColBackground = ConsoleColor.Blue;
                                 break;
                             case (3):
-                                Setting.ConsColBackground = ConsoleColor.Green;
+                                Settings.ConsColBackground = ConsoleColor.Green;
                                 break;
                             case (4):
-                                Setting.ConsColBackground = ConsoleColor.White;
+                                Settings.ConsColBackground = ConsoleColor.White;
                                 break;
                             case (5):
-                                Setting.ConsColBackground = ConsoleColor.Black;
+                                Settings.ConsColBackground = ConsoleColor.Black;
                                 break;
                         }
-                        //MainMenuSetting();
+                        //MainMenuSettings();
                         break;
                     case (5):
                         Console.Write("Write new Width (3-100): ");
                         string strW = Console.ReadLine(), str2W = "";
                         foreach (var e in strW)
                             if (e >= '1' && e <= '9' || e == '0') str2W += e;
-                        if (str2W.Length > 0 && str2W.Length < 9) Setting.FildWidth = int.Parse(str2W);
-                        //MainMenuSetting();
+                        if (str2W.Length > 0 && str2W.Length < 9) Settings.FildWidth = int.Parse(str2W);
+                        //MainMenuSettings();
                         break;
                     case (6):
                         Console.Write("Write new Height (3-100): ");
                         string strH = Console.ReadLine(), str2H = "";
                         foreach (var e in strH)
                             if (e >= '0' && e <= '9') str2H += e;
-                        if (str2H.Length > 0 && str2H.Length < 9) Setting.FildHeight = int.Parse(str2H);
-                        //MainMenuSetting();
+                        if (str2H.Length > 0 && str2H.Length < 9) Settings.FildHeight = int.Parse(str2H);
+                        //MainMenuSettings();
                         break;
                     case (7):
                         System.Console.Write("Write new Game speed: ");
                         string strS = Console.ReadLine(), str2S = "";
                         foreach (var e in strS)
                             if (e >= '1' && e <= '9' || e == '0') str2S += e;
-                        if (str2S.Length > 0 && str2S.Length < 9) Setting.Speed = int.Parse(str2S);
-                        //MainMenuSetting();
+                        if (str2S.Length > 0 && str2S.Length < 9) Settings.Speed = int.Parse(str2S);
+                        //MainMenuSettings();
                         break;
                     case (8):
                         isEnd = true;
                         break;
                     case (9):
-                        if (Setting.ColorScreen == 0)
+                        if (Settings.ColorScreen == 0)
                         {
-                            Setting.ColorScreen = 1;
-                            //MainMenuSetting();
+                            Settings.ColorScreen = 1;
+                            //MainMenuSettings();
                         }
                         else
                         {
-                            Setting.ColorScreen = 0;
-                            //MainMenuSetting();
+                            Settings.ColorScreen = 0;
+                            //MainMenuSettings();
                         }
                         break; */
                 #endregion
@@ -215,12 +216,15 @@ namespace TETRISV1
                     case (2):
                         GameOptionMenu.GameOption();
                         break;
+                    case (3):
+                        ControlOptionMenu.ControlOption();
+                        break;
                     case (8):
-                        TETRISV1.Setting.WriteFileSetting();
+                        TETRISV1.Settings.WriteSettingsInFile();
                         isEnd = false;
                         break;
                     default:
-                        //MainMenuSetting();
+                        //MainMenuSettings();
                         break;
                 }
             }
@@ -237,7 +241,7 @@ namespace TETRISV1
                 do
                 {
                     Console.Clear();
-                    System.Console.WriteLine($"1 Screen type: {(Setting.isColorScreen == 1 ? "Color" : "Text")}");
+                    System.Console.WriteLine($"1 Screen type: {(Settings.isColorScreen == 1 ? "Color" : "Text")}");
                     System.Console.WriteLine($"2 Screen color options:");
                     System.Console.WriteLine($"3 Screen text options:");
                     System.Console.WriteLine("\n\n8 Back");
@@ -250,7 +254,7 @@ namespace TETRISV1
                 switch (v)
                 {
                     case (1):
-                        Setting.isColorScreen = Setting.isColorScreen == 1 ? 0 : 1;
+                        Settings.isColorScreen = Settings.isColorScreen == 1 ? 0 : 1;
                         break;
                     case (2):
                         ScreenColorOptionMenu.ScreenColorOption();
@@ -277,9 +281,9 @@ namespace TETRISV1
                 do
                 {
                     Console.Clear();
-                    System.Console.WriteLine($"1 Single color for blocks: {(TETRISV1.Setting.isSingleColorBlock ? "Yes" : "No")}");
-                    System.Console.Write($"2 Color blocks: "); writeColor(Setting.ConsColBrick);
-                    System.Console.Write($"3 Background color: "); writeColor(Setting.ConsColBackground);
+                    System.Console.WriteLine($"1 Single color for blocks: {(TETRISV1.Settings.isSingleColorBlock ? "Yes" : "No")}");
+                    System.Console.Write($"2 Color blocks: "); writeWithColor(Settings.ConsColBrick);
+                    System.Console.Write($"3 Background color: "); writeWithColor(Settings.ConsColBackground);
                     System.Console.WriteLine($"4 Color figures: ");
                     System.Console.WriteLine("\n8 Back");
                     ScreenColorOptionHandler(ReturnKey());
@@ -290,13 +294,13 @@ namespace TETRISV1
                 switch (v)
                 {
                     case (1):
-                        TETRISV1.Setting.isSingleColorBlock = !TETRISV1.Setting.isSingleColorBlock;
+                        TETRISV1.Settings.isSingleColorBlock = !TETRISV1.Settings.isSingleColorBlock;
                         break;
                     case (2):
-                        Setting.ConsColBrick = ChosesColor();
+                        Settings.ConsColBrick = ChooseColor();
                         break;
                     case (3):
-                        Setting.ConsColBackground = ChosesColor();
+                        Settings.ConsColBackground = ChooseColor();
                         break;
                     case (4):
                         ColorFiguresMenu.ColorFigures();
@@ -319,13 +323,13 @@ namespace TETRISV1
                 do
                 {
                     Console.Clear();
-                    System.Console.Write($"1 S:\t "); writeColor(Setting.FigColor[0]);
-                    System.Console.Write($"2 RS:\t "); writeColor(Setting.FigColor[1]);
-                    System.Console.Write($"3 L:\t "); writeColor(Setting.FigColor[2]);
-                    System.Console.Write($"4 RL:\t "); writeColor(Setting.FigColor[3]);
-                    System.Console.Write($"5 Cube:\t "); writeColor(Setting.FigColor[4]);
-                    System.Console.Write($"6 Line:\t "); writeColor(Setting.FigColor[5]);
-                    System.Console.Write($"7 T:\t "); writeColor(Setting.FigColor[6]);
+                    System.Console.Write($"1 S:\t "); writeWithColor(Settings.FigColor[0]);
+                    System.Console.Write($"2 RS:\t "); writeWithColor(Settings.FigColor[1]);
+                    System.Console.Write($"3 L:\t "); writeWithColor(Settings.FigColor[2]);
+                    System.Console.Write($"4 RL:\t "); writeWithColor(Settings.FigColor[3]);
+                    System.Console.Write($"5 Cube:\t "); writeWithColor(Settings.FigColor[4]);
+                    System.Console.Write($"6 Line:\t "); writeWithColor(Settings.FigColor[5]);
+                    System.Console.Write($"7 T:\t "); writeWithColor(Settings.FigColor[6]);
                     System.Console.Write("\n8 Back");
                     ColorFigureHandler(ReturnKey());
                 } while (isEnd);
@@ -336,25 +340,25 @@ namespace TETRISV1
                 switch (v)
                 {
                     case (1):
-                        Setting.FigColor[0] = ChosesColor();
+                        Settings.FigColor[0] = ChooseColor();
                         break;
                     case (2):
-                        Setting.FigColor[1] = ChosesColor();
+                        Settings.FigColor[1] = ChooseColor();
                         break;
                     case (3):
-                        Setting.FigColor[2] = ChosesColor();
+                        Settings.FigColor[2] = ChooseColor();
                         break;
                     case (4):
-                        Setting.FigColor[3] = ChosesColor();
+                        Settings.FigColor[3] = ChooseColor();
                         break;
                     case (5):
-                        Setting.FigColor[4] = ChosesColor();
+                        Settings.FigColor[4] = ChooseColor();
                         break;
                     case (6):
-                        Setting.FigColor[5] = ChosesColor();
+                        Settings.FigColor[5] = ChooseColor();
                         break;
                     case (7):
-                        Setting.FigColor[6] = ChosesColor();
+                        Settings.FigColor[6] = ChooseColor();
                         break;
                     case (8):
                         isEnd = false;
@@ -374,10 +378,10 @@ namespace TETRISV1
                 do
                 {
                     Console.Clear();
-                    System.Console.WriteLine($"1 Char block: {Setting.keyBuild}");
-                    System.Console.Write($"2 Color block: "); writeColor(Setting.ConsColBrick);
-                    System.Console.WriteLine($"3 Char background: {Setting.background}");
-                    System.Console.Write($"4 Color background: "); writeColor(Setting.ConsColBackground);
+                    System.Console.WriteLine($"1 Char block: {Settings.keyBuild}");
+                    System.Console.Write($"2 Color block: "); writeWithColor(Settings.ConsColBrick);
+                    System.Console.WriteLine($"3 Char background: {Settings.background}");
+                    System.Console.Write($"4 Color background: "); writeWithColor(Settings.ConsColBackground);
                     System.Console.WriteLine("\n8 Back");
                     ScreenTextOptionHandler(ReturnKey());
                 } while (isEnd);
@@ -388,17 +392,17 @@ namespace TETRISV1
                 {
                     case (1):
                         System.Console.Write("Change new Key: ");
-                        Setting.keyBuild = Console.ReadKey(true).KeyChar;
+                        Settings.keyBuild = Console.ReadKey(true).KeyChar;
                         break;
                     case (2):
-                        Setting.ConsColBrick = ChosesColor();
+                        Settings.ConsColBrick = ChooseColor();
                         break;
                     case (3):
                         System.Console.Write("Change new Key: ");
-                        Setting.background = Console.ReadKey().KeyChar;
+                        Settings.background = Console.ReadKey().KeyChar;
                         break;
                     case (4):
-                        Setting.ConsColBackground = ChosesColor();
+                        Settings.ConsColBackground = ChooseColor();
                         break;
                     case (8):
                         isEnd = false;
@@ -415,9 +419,9 @@ namespace TETRISV1
                 do
                 {
                     Console.Clear();
-                    System.Console.WriteLine($"1 Widht: {Setting.FildWidth}");
-                    System.Console.WriteLine($"2 Height: {Setting.FildHeight}");
-                    System.Console.WriteLine($"3 Speed: {Setting.Speed}");
+                    System.Console.WriteLine($"1 Widht: {Settings.FildWidth}");
+                    System.Console.WriteLine($"2 Height: {Settings.FildHeight}");
+                    System.Console.WriteLine($"3 Speed: {Settings.Speed}");
                     System.Console.WriteLine("\n\n8 Back");
                     GameOptionHandler(ReturnKey());
                 }
@@ -429,36 +433,37 @@ namespace TETRISV1
                 switch (v)
                 {
                     case (1):
-                        Console.Write("Write new Width (3-100): ");
-                        string strW = Console.ReadLine(), str2W = "";
-                        foreach (var e in strW)
-                            if (e >= '1' && e <= '9' || e == '0') str2W += e;
-                        if (str2W.Length > 0 && str2W.Length < 9)
-                        {
-                            num = int.Parse(str2W);
-                            if (num > 3 && num < 101) Setting.FildWidth = num;
-                        }
+                        Console.Write("Choise new Width (3-100): ");
+                        string strW = Console.ReadLine(); //str2W = "";
+                                                          // foreach (var e in strW)
+                                                          //     if (e >= '1' && e <= '9' || e == '0') str2W += e;
+                                                          // if (str2W.Length > 0 && str2W.Length < 9)
+                                                          // {
+                                                          // num = int.Parse(str2W);
+                        int.TryParse(strW, out num);
+                        if (num > 3 && num < 101) Settings.FildWidth = num;
+                        // }
                         break;
                     case (2):
-                        Console.Write("Write new Height (3-100): ");
+                        Console.Write("Choise new Height (3-100): ");
                         string strH = Console.ReadLine(), str2H = "";
                         foreach (var e in strH)
                             if (e >= '0' && e <= '9') str2H += e;
                         if (str2H.Length > 0 && str2H.Length < 9)
                         {
                             num = int.Parse(str2H);
-                            if (num > 3 && num < 101) Setting.FildHeight = num;
+                            if (num > 3 && num < 101) Settings.FildHeight = num;
                         }
                         break;
                     case (3):
-                        System.Console.Write("Write new Game speed: ");
+                        System.Console.Write("Choise new Game speed: ");
                         string strS = Console.ReadLine(), str2S = "";
                         foreach (var e in strS)
                             if (e >= '1' && e <= '9' || e == '0') str2S += e;
                         if (str2S.Length > 0 && str2S.Length < 9)
                         {
                             num = int.Parse(str2S);
-                            if (num > 3 && num < 101) Setting.Speed = num;
+                            if (num > 0 && num < 101) Settings.Speed = num;
                         }
                         break;
                     case (8):
@@ -470,13 +475,56 @@ namespace TETRISV1
             }
         }
 
-        static void writeColor(ConsoleColor c)
+        class ControlOptionMenu
+        {
+            static bool isEnd = true;
+            public static void ControlOption()
+            {
+                do
+                {
+                    Console.Clear();
+                    System.Console.WriteLine($"1 Left: {Settings.controlKeys[0]}");
+                    System.Console.WriteLine($"2 Right: {Settings.controlKeys[1]}");
+                    System.Console.WriteLine($"3 Down: {Settings.controlKeys[2]}");
+                    System.Console.WriteLine($"4 Rotate: {Settings.controlKeys[3]}");
+                    System.Console.WriteLine($"5 Quit: {Settings.controlKeys[4]}");
+                    System.Console.WriteLine("\n8 Back");
+                    ControlOptionHandler(ReturnKey());
+                } while (isEnd);
+            }
+            static void ControlOptionHandler(int v)
+            {
+                switch (v)
+                {
+                    case (1):
+                        Settings.controlKeys[0] = Console.ReadKey(true).KeyChar;
+                        break;
+                    case (2):
+                        Settings.controlKeys[1] = Console.ReadKey(true).KeyChar;
+                        break;
+                    case (3):
+                        Settings.controlKeys[2] = Console.ReadKey(true).KeyChar;
+                        break;
+                    case (4):
+                        Settings.controlKeys[3] = Console.ReadKey(true).KeyChar;
+                        break;
+                    case (5):
+                        Settings.controlKeys[4] = Console.ReadKey(true).KeyChar;
+                        break;
+                    case (8):
+                        isEnd = false;
+                        break;
+                }
+            }
+        }
+
+        static void writeWithColor(ConsoleColor c)
         {
             Console.BackgroundColor = c;
             System.Console.WriteLine(string.Format($"{c,12}"));
             Console.ResetColor();
         }
-        static ConsoleColor ChosesColor()
+        static ConsoleColor ChooseColor()
         {
             Console.Clear();
             PrintColorValue(0, 7);
