@@ -1,6 +1,6 @@
 /*
     1 New game
-    2 Load game
+    2 Load game(continue)
     3 Save game
 
     4 Setting
@@ -21,6 +21,7 @@
             Width
             Height
             Speed
+        Control option
 
     8 Exit
 

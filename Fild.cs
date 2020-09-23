@@ -16,10 +16,10 @@ namespace TETRISV1
 
         public  bool RunGame = true;
         public IFigures FigNow; //= new IFigures();
-        Random rand = new Random();     //for NewFigure
         public IFigures FigNext { get; set; }
+        public int numberFigNext, numberFigNow;              // for NewFigure
+        Random rand = new Random();     //for NewFigure
 
-        int numberNextFig;              // for NewFigure
         public Fild(int rows, int columns)
         {
             Move.startMovePoint = columns / 2 - 1;
@@ -31,7 +31,7 @@ namespace TETRISV1
                     FildGame[i, j] = Settings.background;
                 }
             }
-            numberNextFig = rand.Next(1, 8);
+            numberFigNext = rand.Next(1, 8);
             MakeNextFig();
 
         }
@@ -40,14 +40,14 @@ namespace TETRISV1
         {
             Run.FlagFastFall = false;
             Run.StepFall = 99;
-            try //first null
+            try //first call is null
             {
                 Move.CheckRows(this);
             }
             catch { }
             Move.dotMove[0] = 0; Move.dotMove[1] = Move.startMovePoint;
-            FigNow = FigNext;
-            numberNextFig = rand.Next(1, 8);
+            FigNow = FigNext; numberFigNow = numberFigNext;
+            numberFigNext = rand.Next(1, 8);
             MakeNextFig();
             if (!SupportMethods.Intersection(FigNow.Form, this))
             {
@@ -69,9 +69,9 @@ namespace TETRISV1
 
             }
         }
-        void MakeNextFig()
+        public void MakeNextFig()
         {
-            switch (numberNextFig)
+            switch (numberFigNext)
             {
                 case (0):
                     FigNext = new LineSizeTwoFigure(); FigNext.RestorForm();

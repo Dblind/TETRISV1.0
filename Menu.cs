@@ -49,6 +49,9 @@ namespace TETRISV1
                         Run.RunGame();
                         //Fild.RunGame = true;
                         break;
+                    case (3):
+                        ContinueMenu.Continue();
+                        break;
                     case (4):
                         SettingsMenu.Settings();
                         break;
@@ -64,6 +67,13 @@ namespace TETRISV1
         {
             static ReturnValue Deleg = MainMenu.MainMenuHandler;
 
+        }
+        class ContinueMenu
+        {
+            public static void Continue()
+            {
+                Run.ContinueGame();
+            }
         }
 
         class SettingsMenu
