@@ -11,26 +11,28 @@ namespace TETRISV1
         public DisplayVariable DisplayType;
         public DelegFallWallColor FallWallColorScreen;
         public DelegFallWallColor ClearUpLine;
-        public char[,] FildGame = new char[,] { { Settings.background } };
-        public FildColor FCScreen;// = new FildColor(GameFild);
+        public bool[,] FildGame = new bool[,] { { false } };
+        public FildColor FCScreen;
 
-        public  bool RunGame = true;
+        public bool RunGame = true;
         public IFigures FigNow; //= new IFigures();
         public IFigures FigNext { get; set; }
         public int numberFigNext, numberFigNow;              // for NewFigure
+        public int Score = 0;
         Random rand = new Random();     //for NewFigure
 
         public Fild(int rows, int columns)
         {
             Move.startMovePoint = columns / 2 - 1;
-            FildGame = new char[rows, columns];
+            FildGame = new bool[rows, columns];
             for (int i = 0; i < FildGame.GetLength(0); i++)
             {
                 for (int j = 0; j < FildGame.GetLength(1); j++)
                 {
-                    FildGame[i, j] = Settings.background;
+                    FildGame[i, j] = false;
                 }
             }
+            FCScreen = new FildColor(this);
             numberFigNext = rand.Next(1, 8);
             MakeNextFig();
 
@@ -61,8 +63,9 @@ namespace TETRISV1
                     if ('q' == Console.ReadKey(true).KeyChar) flag = false;
                 }
                 while (flag);
-                this.RunGame = false;
-                Control.Score = 0;
+                this.RunGame = Run.haveGame = false;
+                Run.isSave = true;
+                Score = 0;
                 Console.ResetColor();
                 Console.CursorVisible = true;
 
@@ -100,10 +103,12 @@ namespace TETRISV1
                     break;
             }
         }
+            public static int counter = 0;
 
         public void Display()
         {
             DisplayType(Run.GameFild);
+            Fild.counter++;
         }
     }
 
@@ -119,25 +124,29 @@ namespace TETRISV1
             {
                 for (int j = 0; j < fg.FildGame.GetLength(1); j++)
                 {
-                    System.Console.Write(fg.FildGame[i, j]);
+                    if (fg.FildGame[i, j]) System.Console.Write(Settings.keyBuild);
+                    else System.Console.Write(Settings.keyBackground);
                 }
                 System.Console.WriteLine();
             }
             Move.TakeOutFigForm(fg);
 
+            Console.ResetColor();
+            System.Console.WriteLine(Fild.counter);
+
             // print Score
             Console.CursorTop = 0;
             Console.CursorLeft = fg.FildGame.GetLength(1) + 3;
             Console.ForegroundColor = ConsoleColor.Red;
-            System.Console.WriteLine(String.Format($"{Control.Score,10}"));
+            System.Console.WriteLine(String.Format($"{fg.Score,10}"));
 
             // clear place for view NextFig
-
             for (int i = 0; i < fg.FigNext.Form.GetLength(0); i++)
             {
                 ClearLine();
                 for (int j = 0; j < fg.FigNext.Form.GetLength(1); j++)
-                    System.Console.Write(fg.FigNext.Form[i, j]);
+                    if (fg.FigNext.Form[i, j]) System.Console.Write(Settings.keyBuild);
+                    else System.Console.Write(Settings.keyBackground);
             }
             if (fg.FigNext.Form.GetLength(0) < 3)
             {
@@ -148,7 +157,7 @@ namespace TETRISV1
             {
                 System.Console.WriteLine();
                 Console.CursorLeft = fg.FildGame.GetLength(1) + 3;
-                System.Console.Write($"{Settings.background}{Settings.background}{ Settings.background}{ Settings.background}");
+                System.Console.Write($"    ");
                 Console.CursorLeft = fg.FildGame.GetLength(1) + 3;
             }
 

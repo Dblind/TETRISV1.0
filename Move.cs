@@ -68,9 +68,9 @@ namespace TETRISV1
             {
                 for (int j = 0; j < fg.FigNow.Form.GetLength(1); j++)
                 {
-                    if (fg.FigNow.Form[i, j] == Settings.keyBuild)
+                    if (fg.FigNow.Form[i, j] == true)
                     {
-                        fg.FildGame[i + dotMove[0], j + dotMove[1]] = Settings.background;
+                        fg.FildGame[i + dotMove[0], j + dotMove[1]] = false;
                         if (fg.DelBrickColor != null)
                             fg.DelBrickColor(i + dotMove[0], j + dotMove[1], Settings.ConsColBackground);
                     }
@@ -83,9 +83,9 @@ namespace TETRISV1
             {
                 for (int j = 0; j < fg.FigNow.Form.GetLength(1); j++)
                 {
-                    if (fg.FigNow.Form[i, j] == Settings.keyBuild)
+                    if (fg.FigNow.Form[i, j] == true)
                     {
-                        fg.FildGame[i + dotMove[0], j + dotMove[1]] = Settings.keyBuild;
+                        fg.FildGame[i + dotMove[0], j + dotMove[1]] = true;
                         if (fg.AddBrickColor != null)
                             fg.AddBrickColor(dotMove[0] + i, dotMove[1] + j, fg.FigNow.FigureColor);
                     }
@@ -101,11 +101,11 @@ namespace TETRISV1
                 flag = flag | 0b10;
                 for (int j = 0; j < fg.FildGame.GetLength(1); j++)
                 {
-                    if (fg.FildGame[i, j] == Settings.background) { flag = flag & 0b01; break; }
+                    if (fg.FildGame[i, j] == false) { flag = flag & 0b01; break; }
                 }
                 if ((flag & 0b10) == 0b10)
                 {
-                    FallWall(i); Control.Score += fg.FildGame.GetLength(1);
+                    FallWall(i); fg.Score += fg.FildGame.GetLength(1);
                 }
             }
             void FallWall(int row)
@@ -121,7 +121,7 @@ namespace TETRISV1
                 }
                 for (int i = 0, j = 0; j < fg.FildGame.GetLength(1); j++)
                 {
-                    fg.FildGame[i, j] = Settings.background;
+                    fg.FildGame[i, j] = false;
                     if (Run.GameFild.ClearUpLine != null)
                         Run.GameFild.ClearUpLine(i, j);
                 }

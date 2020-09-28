@@ -15,17 +15,29 @@ class program
         System.Console.WriteLine(Environment.CurrentDirectory);
         System.Console.WriteLine();
         //File.WriteAllText("test.txt","HW!");
-        var rwf = new RWF();
+        var rwf = new W1();
         //File.WriteAllBytes(rwf,"set.o");
         string str = File.ReadAllText("test.txt");
         System.Console.WriteLine(str);
         string[] lines = File.ReadAllLines("test.txt");
-        foreach(var e in lines) System.Console.WriteLine(e);
+        foreach (var e in lines) System.Console.WriteLine(e);
+
+        /* str = W1.ss;
+        int r1 = W1.r1;
+
+        str = W2.ss;
+        r1 = W2.r2; */
     }
-    
-    class RWF
+
+    class W1
     {
-        int r = 0;
-        string s = "a";
+        //public static int r1 = 0;
+        public static string ss = "a";
+    }
+
+    class W2
+    {
+        //public static int r2 = 0;
+        public static string ss = "f";
     }
 }

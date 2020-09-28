@@ -9,21 +9,19 @@ namespace TETRISV1
             Move.SetFigForm(fg);
             System.Console.CursorTop = 0; Console.CursorLeft = 0;
             Console.BackgroundColor = Settings.ConsColBackground;
-            //Console.ForegroundColor = Setting.ConsColBrick;
             for (int i = 0; i < fg.FildGame.GetLength(0); i++)
             {
                 for (int j = 0; j < fg.FildGame.GetLength(1); j++)
                 {
-                    // if (fg.FildGame[i, j] == Setting.keyBuild)
-                    // {
                     Console.BackgroundColor = fg.FCScreen.FildColorArray[i, j];
-                    // }
-                    // else Console.BackgroundColor = Setting.ConsColBackground;
                     System.Console.Write("  ");
                 }
                 System.Console.WriteLine();
             }
             Move.TakeOutFigForm(fg);
+
+            Console.ResetColor();
+            System.Console.WriteLine(Fild.counter);
 
 
             // print Score
@@ -31,15 +29,14 @@ namespace TETRISV1
             Console.CursorLeft = 2 * fg.FildGame.GetLength(1) + 3;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.BackgroundColor = Settings.ConsColBackground;
-            System.Console.WriteLine(String.Format($"{Control.Score,10}"));
+            System.Console.WriteLine(String.Format($"{fg.Score,10}"));
 
             // clear place for view NextFig
-
             for (int i = 0; i < fg.FigNext.Form.GetLength(0); i++)
             {
                 ClearLine();
                 for (int j = 0; j < fg.FigNext.Form.GetLength(1); j++)
-                    if (fg.FigNext.Form[i, j] == Settings.keyBuild)
+                    if (fg.FigNext.Form[i, j] == true)
                     {
                         Console.BackgroundColor = fg.FigNext.FigureColor;
                         System.Console.Write("  ");
