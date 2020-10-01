@@ -5,9 +5,9 @@ namespace TETRISV1
 
     static class Move
     {
-        public static int startMove;
+        public static int startMovePoint;
         public static void Wait(double T) => Thread.Sleep((int)(T * 1000));
-              public static int[] dotMove = new int[2];
+        public static int[] dotMove = new int[2];
         public static bool CheckDowd(Fild fg)
         {
             if (Move.dotMove[0] + fg.FigNow.Form.GetLength(0) == fg.FildGame.GetLength(0))
@@ -22,7 +22,7 @@ namespace TETRISV1
             }
         }
         public static void MoveDowd(Fild fg)
-        {           
+        {
             Move.dotMove[0]++;
         }
 
@@ -62,42 +62,50 @@ namespace TETRISV1
         {
             Move.dotMove[1]++;
         }
-        public static void DeleteFig(Fild fg)
+        public static void TakeOutFigForm(Fild fg)
         {
             for (int i = 0; i < fg.FigNow.Form.GetLength(0); i++)
             {
                 for (int j = 0; j < fg.FigNow.Form.GetLength(1); j++)
                 {
-                    if (fg.FigNow.Form[i, j] == Setting.keyBuild)
-                        fg.FildGame[i + dotMove[0], j + dotMove[1]] = Setting.background;
+                    if (fg.FigNow.Form[i, j] == true)
+                    {
+                        fg.FildGame[i + dotMove[0], j + dotMove[1]] = false;
+                        if (fg.DelBrickColor != null)
+                            fg.DelBrickColor(i + dotMove[0], j + dotMove[1], Settings.ConsColBackground);
+                    }
                 }
             }
         }
-        public static void PrintFig(Fild fg)
+        public static void SetFigForm(Fild fg)
         {
             for (int i = 0; i < fg.FigNow.Form.GetLength(0); i++)
             {
                 for (int j = 0; j < fg.FigNow.Form.GetLength(1); j++)
                 {
-                    if (fg.FigNow.Form[i, j] == Setting.keyBuild)
-                        fg.FildGame[i + dotMove[0], j + dotMove[1]] = Setting.keyBuild;
+                    if (fg.FigNow.Form[i, j] == true)
+                    {
+                        fg.FildGame[i + dotMove[0], j + dotMove[1]] = true;
+                        if (fg.AddBrickColor != null)
+                            fg.AddBrickColor(dotMove[0] + i, dotMove[1] + j, fg.FigNow.FigureColor);
+                    }
                 }
             }
         }
         public static void CheckRows(Fild fg)
         {
-            Move.PrintFig(fg);
+            Move.SetFigForm(fg);
             var flag = 0b11;
             for (int i = 0; i < fg.FildGame.GetLength(0); i++)
             {
                 flag = flag | 0b10;
                 for (int j = 0; j < fg.FildGame.GetLength(1); j++)
                 {
-                    if (fg.FildGame[i, j] == Setting.background) { flag = flag & 0b01; break; }
+                    if (fg.FildGame[i, j] == false) { flag = flag & 0b01; break; }
                 }
                 if ((flag & 0b10) == 0b10)
                 {
-                    FallWall(i); Control.Score += fg.FildGame.GetLength(1);
+                    FallWall(i); fg.Score += fg.FildGame.GetLength(1);
                 }
             }
             void FallWall(int row)
@@ -107,11 +115,15 @@ namespace TETRISV1
                     for (int j = 0; j < fg.FildGame.GetLength(1); j++)
                     {
                         fg.FildGame[i, j] = fg.FildGame[i - 1, j];
+                        if (Run.GameFild.FallWallColorScreen != null)
+                            Run.GameFild.FallWallColorScreen(i, j);
                     }
                 }
                 for (int i = 0, j = 0; j < fg.FildGame.GetLength(1); j++)
                 {
-                    fg.FildGame[i, j] = Setting.background;
+                    fg.FildGame[i, j] = false;
+                    if (Run.GameFild.ClearUpLine != null)
+                        Run.GameFild.ClearUpLine(i, j);
                 }
             }
         }

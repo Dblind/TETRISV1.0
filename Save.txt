@@ -1,0 +1,27 @@
+16
+10
+4
+7
+1
+2
+30
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+    + ++  
+    +++   
+++  ++++++
+
+
+ now TETRISV1.SFigure
+ next TETRISV1.ReversSFigure

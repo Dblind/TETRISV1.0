@@ -9,72 +9,101 @@ namespace TETRISV1
         public static bool RunGameFlag = true;
         public void RunGame()
         {
-            try { Setting.ReadFileSetting(); }
+            try { Settings.ReadSettingsFileAndApply(); }
             catch { }
             while (RunGameFlag)
             {
-                Rellise.MainMenuRun();
+                Menu.MainMenu.MainMenuWriter();
             }
         }
     }
     delegate void FallDeleg();
     class Run
     {
+        public static bool haveGame, isSave = true;
         public static event FallDeleg TestDeleg;
         static ConsoleKeyInfo key2;
-        static Fild GameFild;
+        public static Fild GameFild;
         public static int count = 0;
         public static int StepFall { get; set; } = 99;
         public static bool FlagFastFall { get; set; } = false;
         public static void RunGame()
         {
+            haveGame = true;
+            isSave = false;
             Console.CursorVisible = false;
             Console.Clear();
-            GameFild = new Fild(Setting.FildHeight, Setting.FildWidth);
+            GameFild = new Fild(Settings.FildHeight, Settings.FildWidth);
+
             GameFild.NewFigure();
-            GameFild.Display();
-            // FigNow = FigNext;
 
-            while (Fild.RunGame)
+            bodyWhile();
+        }
+        public static void ContinueGame()
+        {
+            isSave = false;
+            Console.CursorVisible = false;
+            Console.Clear();
+
+            if (haveGame) { GameFild.RunGame = true; bodyWhile(); }
+            else
             {
-                GameFild.Display();
-                TestMove();
-
-                Thread.Sleep(Setting.Speed);
-                if (count > StepFall)
-                {
-                    count = 0;
-                    if (Move.CheckDowd(GameFild)) Move.MoveDowd(GameFild);
-                    else GameFild.NewFigure();
-                }
-                else count++;
-
+                try { Load.LoadGame(); }
+                catch { isSave = Console.CursorVisible = true; return; }
+                haveGame = GameFild.RunGame = true;
+                bodyWhile();
             }
         }
+
         static void TestMove()
         {
             if (Console.KeyAvailable == true)
             {
                 key2 = Console.ReadKey(true);
                 Control.Push(key2, GameFild);
-                TestDeleg = TM2;
-                //TestDeleg();
-                //TM2();
-                //TestMove();
             }
         }
-        static void TM2()
+
+        static void bodyWhile()
         {
-            if (Console.KeyAvailable == true)
+            if (Settings.isColorScreen == 1)
             {
-                if (Move.CheckRight(GameFild)) Move.MoveRight(GameFild);
-                //Control.Push(key2, GameFild);
-                //TM2();
-                Thread.Sleep(100);
-                TestDeleg();
+
+                GameFild.AddBrickColor += Run.GameFild.FCScreen.AddBrick;
+                GameFild.DelBrickColor += Run.GameFild.FCScreen.DelBrick;
+                GameFild.RenderType += ColorDisplay.ColorPrintDisplay;
+                GameFild.FallWallColorScreen += GameFild.FCScreen.FallWall;
+                GameFild.ClearUpLine += GameFild.FCScreen.ClearUpLine;
             }
+            else GameFild.RenderType += PrintScreen.PrintCharScreen;
 
+            GameFild.ScreenRender();
+            while (GameFild.RunGame)
+            {
+                TestMove();
 
+                if (count > StepFall)
+                {
+                    count = 0;
+                    if (Move.CheckDowd(GameFild)) Move.MoveDowd(GameFild);
+                    else GameFild.NewFigure();
+                    GameFild.ScreenRender();
+                }
+                else count += Settings.Speed;//count++;
+                Thread.Sleep(10);
+            }
+            Console.ResetColor();
+            
+            if (Settings.isColorScreen == 1)
+            {
+
+                GameFild.AddBrickColor -= Run.GameFild.FCScreen.AddBrick;
+                GameFild.DelBrickColor -= Run.GameFild.FCScreen.DelBrick;
+                GameFild.RenderType -= ColorDisplay.ColorPrintDisplay;
+                GameFild.FallWallColorScreen -= GameFild.FCScreen.FallWall;
+                GameFild.ClearUpLine -= GameFild.FCScreen.ClearUpLine;
+            }
+            else GameFild.RenderType -= PrintScreen.PrintCharScreen;
         }
     }
 }
