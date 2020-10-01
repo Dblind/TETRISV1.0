@@ -63,8 +63,8 @@ namespace TETRISV1
                         while (!Run.isSave)
                         {
                             ch = Console.ReadKey(true).KeyChar;
-                            if (ch.Equals('y')) { Save.SeveGame(); Run.isSave = false; }
-                            else if (ch.Equals('n')) Run.isSave = false;
+                            if (ch.Equals('y')) { Save.SeveGame(); Run.isSave = true; }
+                            else if (ch.Equals('n')) Run.isSave = true;
                         }
                         break;
                 }

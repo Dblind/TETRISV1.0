@@ -20,14 +20,14 @@ namespace TETRISV1
                     {
 
                         Move.MoveLeft(GameFild);
-                        GameFild.Display();
+                        GameFild.ScreenRender();
                     }
                     break;
                 case ('k'):
                     if (Move.CheckRight(GameFild))
                     {
                         Move.MoveRight(GameFild);
-                        GameFild.Display();
+                        GameFild.ScreenRender();
                     }
                     break;
                 case ('j'):
@@ -39,11 +39,11 @@ namespace TETRISV1
                         Run.StepFall = Run.FlagFastFall ? 10 : 99;
                     }
                     else GameFild.NewFigure();
-                    GameFild.Display();
+                    GameFild.ScreenRender();
                     break;
                 case ('u'):
-                    GameFild.FigNow.Roll(GameFild);
-                    GameFild.Display();
+                    GameFild.FigNow.Rotate(GameFild);
+                    GameFild.ScreenRender();
                     break;
                 case ('q'):
                     GameFild.RunGame = false;

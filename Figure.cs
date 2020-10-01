@@ -8,13 +8,11 @@ namespace TETRISV1
     }
     interface IFigures
     {
-        //int rollCount;
-        public ConsoleColor FigureColor { get; set; }//= ConsoleColor.Cyan;
-
-        public int Next();
+        public ConsoleColor FigureColor { get; set; }
+        public int NextPosition();
         public void RestorForm();
-        public void Roll(Fild fg);
-        public void RollPosition(int rc, Fild fg);
+        public void Rotate(Fild fg);
+        public void RotatePosition(int rc, Fild fg);
         public bool [,] Form { get; set; }
 
     }
@@ -30,7 +28,7 @@ namespace TETRISV1
                         {true,true}};       // ++
 
 
-        public int Next()
+        public int NextPosition()
         {
             if (rollCount < 1)
             {
@@ -46,21 +44,21 @@ namespace TETRISV1
         {
             Form = Form_0;
         }
-        public void Roll(Fild fg)
+        public void Rotate(Fild fg)
         {
-            int cc = fg.FigNow.Next();
-            fg.FigNow.RollPosition(cc, fg);
+            int cc = fg.FigNow.NextPosition();
+            fg.FigNow.RotatePosition(cc, fg);
         }
         // +  --
         // +  ++
-        public void RollPosition(int rc, Fild fg)
+        public void RotatePosition(int rc, Fild fg)
         {
             switch (rc)
             {
                 case (0):
                     if (SupportMethods.Intersection(Form_0, fg))
                     {
-                        Form = Form_0; rollCount = Next();
+                        Form = Form_0; rollCount = NextPosition();
                     }
                     break;
                 case (1):
@@ -89,7 +87,7 @@ namespace TETRISV1
                     }
                     else
                     {
-                        Form = Form_2; rollCount = Next(); Move.SetFigForm(fg);
+                        Form = Form_2; rollCount = NextPosition(); Move.SetFigForm(fg);
                     }
                     break;
             }
@@ -116,11 +114,11 @@ namespace TETRISV1
                         {true},    // .+.+
                         {true}};   // .+..
 
-        public int Next() => rollCount > 0 ? 0 : 1;
+        public int NextPosition() => rollCount > 0 ? 0 : 1;
         public bool [,] Form { get; set; }
         public void RestorForm() => Form = Form_1;
-        public void Roll(Fild fg) => fg.FigNow.RollPosition(Next(), fg);
-        public void RollPosition(int rc, Fild fg)
+        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(NextPosition(), fg);
+        public void RotatePosition(int rc, Fild fg)
         {
             switch (rc)
             {
@@ -144,32 +142,32 @@ namespace TETRISV1
                     if (Move.dotMove[1] == 0 || (flagOut0 & 0b11100) == 0b11100)    // zero, left
                     {
                         Move.dotMove[0] += 2;
-                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                         else Move.dotMove[0] -= 2;
                     }
                     else if ((flagOut0 & 0b10010) == 0b10010)       //right +1
                     {
                         Move.dotMove[0] += 2; Move.dotMove[1] -= 3;
-                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                         else { Move.dotMove[0] -= 2; Move.dotMove[1] += 3; }
                     }
                     else if ((flagOut0 & 0b10001) == 0b10001)       //right +2
                     {
                         Move.dotMove[0] += 2; Move.dotMove[1] -= 2;
-                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                         else { Move.dotMove[0] -= 2; Move.dotMove[1] += 2; }
                     }
                     else if ((flagOut0 & 0b01000) != 0b01000)       //right wall
                     {
                         int boxCoordColumn = Move.dotMove[1];
                         Move.dotMove[0] += 2; Move.dotMove[1] = fg.FildGame.GetLength(1) - 4;
-                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                         else { Move.dotMove[0] -= 2; Move.dotMove[1] = boxCoordColumn; }
                     }
                     else        //default empty
                     {
                         Move.dotMove[0] += 2; Move.dotMove[1]--;
-                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                         else { Move.dotMove[0] -= 2; Move.dotMove[1]++; }
                     }
                     break;
@@ -177,7 +175,7 @@ namespace TETRISV1
                     if (Move.dotMove[0] != fg.FildGame.GetLength(0) - 1)
                     {
                         Move.dotMove[0] -= 2; Move.dotMove[1]++;
-                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = NextPosition(); }
                         else { Move.dotMove[0] += 2; Move.dotMove[1]--; }
                     }
                     break;
@@ -211,21 +209,21 @@ namespace TETRISV1
         bool [,] Form_1 = new bool [,] {
                         {false,true,true},
                         {true,true,false}};
-        public int Next()
+        public int NextPosition()
         {
             if (rollCount < 1) return rollCount + 1;
             else return 0;
         }
         public bool [,] Form { get; set; }
         public void RestorForm() => Form = Form_0;
-        public void Roll(Fild fg) => fg.FigNow.RollPosition(fg.FigNow.Next(), fg);
-        public void RollPosition(int rc, Fild fg)
+        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(fg.FigNow.NextPosition(), fg);
+        public void RotatePosition(int rc, Fild fg)
         {
             switch (rc)
             {
                 case (0):
                     Move.dotMove[0]--;
-                    if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                    if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                     else Move.dotMove[0]++;
                     break;
                 case (1):
@@ -235,7 +233,7 @@ namespace TETRISV1
                         Move.dotMove[1] > 0))
                     { Move.dotMove[0]++; Move.dotMove[1]--; flagOut1 = true; }
                     else Move.dotMove[0]++;
-                    if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
+                    if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = NextPosition(); }
                     else if (flagOut1) { Move.dotMove[0]--; Move.dotMove[1]++; }
                     else Move.dotMove[0]--;
                     break;
@@ -259,21 +257,21 @@ namespace TETRISV1
         bool [,] Form_1 = new bool [,] {
                         {true, true, false},
                         {false, true, true}};
-        public int Next()
+        public int NextPosition()
         {
             if (rollCount < 1) return rollCount + 1;
             else return 0;
         }
         public bool [,] Form { get; set; }
         public void RestorForm() => Form = Form_0;
-        public void Roll(Fild fg) => fg.FigNow.RollPosition(fg.FigNow.Next(), fg);
-        public void RollPosition(int rc, Fild fg)
+        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(fg.FigNow.NextPosition(), fg);
+        public void RotatePosition(int rc, Fild fg)
         {
             switch (rc)
             {
                 case (0):
                     Move.dotMove[0]--; Move.dotMove[1]++;
-                    if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                    if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                     else { Move.dotMove[0]++; Move.dotMove[1]--; }
                     break;
 
@@ -284,7 +282,7 @@ namespace TETRISV1
                         Move.dotMove[1] + 2 < fg.FildGame.GetLength(1)))
                     { Move.dotMove[0]++; flagOut1 = true; }
                     else { Move.dotMove[0]++; Move.dotMove[1]--; }
-                    if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
+                    if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = NextPosition(); }
                     else if (flagOut1) { Move.dotMove[0]--; }
                     else { Move.dotMove[0]--; Move.dotMove[1]++; }
                     break;
@@ -299,15 +297,15 @@ namespace TETRISV1
             if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
             else FigureColor = Settings.FigColor[4];
         }
-        public int Next() { return 0; }
+        public int NextPosition() { return 0; }
         public void RestorForm()
         {
             Form = new bool [,] {
                         {true,true},
                         {true,true}};
         }
-        public void Roll(Fild fg) { }
-        public void RollPosition(int rc, Fild fg) { }
+        public void Rotate(Fild fg) { }
+        public void RotatePosition(int rc, Fild fg) { }
         public bool [,] Form { get; set; }
 
     }
@@ -334,15 +332,15 @@ namespace TETRISV1
         bool [,] Form_3 = new bool [,] {
                         {false,false,true},    // ..+
                         {true,true,true}};       // +++
-        public int Next()
+        public int NextPosition()
         {
             if (rollCount < 3) return rollCount + 1;
             else return 0;
         }
         public bool [,] Form { get; set; }
         public void RestorForm() => Form = Form_0;
-        public void Roll(Fild fg) => fg.FigNow.RollPosition(fg.FigNow.Next(), fg);
-        public void RollPosition(int rc, Fild fg)
+        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(fg.FigNow.NextPosition(), fg);
+        public void RotatePosition(int rc, Fild fg)
         {
             switch (rc)
             {
@@ -351,13 +349,13 @@ namespace TETRISV1
                         fg.FildGame[Move.dotMove[0] - 1, Move.dotMove[1]] == true)
                     {
                         Move.dotMove[0]--; Move.dotMove[1]++;
-                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                         else { Move.dotMove[0]++; Move.dotMove[1]--; }
                     }
                     else
                     {
                         Move.dotMove[0]--;
-                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                         else Move.dotMove[0]++;
                     }
                     break;
@@ -365,7 +363,7 @@ namespace TETRISV1
                     if (fg.FildGame[Move.dotMove[0], Move.dotMove[1] + 1] == true && Move.dotMove[1] > 1)
                     {
                         Move.dotMove[1] -= 2;
-                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = NextPosition(); }
                         else Move.dotMove[1] += 2;
                     }
                     else if (((Move.dotMove[1] < fg.FildGame.GetLength(1) - 2) &&
@@ -373,12 +371,12 @@ namespace TETRISV1
                              Move.dotMove[1] > fg.FildGame.GetLength(1) - 3)
                     {
                         Move.dotMove[1] -= 1;
-                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = NextPosition(); }
                         else Move.dotMove[1] += 1;
                     }
                     else
                     {
-                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = NextPosition(); }
                     }
                     break;
                 case (2):
@@ -387,14 +385,14 @@ namespace TETRISV1
                         fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 1] == true))     // .*.
                     {
                         Move.dotMove[1]--;
-                        if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = NextPosition(); }
                         else { Move.dotMove[1]++; }
                     }
                     else if (Move.dotMove[0] < fg.FildGame.GetLength(0) - 2 &&                              // +++
                             (fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == true ||   // +.*
                             fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == true))     // ..*
                     {
-                        if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = NextPosition(); }
                     }
                     else
                     {
@@ -402,7 +400,7 @@ namespace TETRISV1
                         if (Move.dotMove[0] == fg.FildGame.GetLength(0) - 2) flagOut2 = true;
                         if (flagOut2) Move.dotMove[0]--;
                         Move.dotMove[1]++;
-                        if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = NextPosition(); }
                         else
                         {
                             if (flagOut2) Move.dotMove[0]++;
@@ -415,7 +413,7 @@ namespace TETRISV1
                         fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1]] == true)
                     {
                         Move.dotMove[0]++; Move.dotMove[1]++;
-                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = NextPosition(); }
                         else { Move.dotMove[0]--; Move.dotMove[1]--; }
                     }
                     else if ((Move.dotMove[1] < fg.FildGame.GetLength(1) - 2 && Move.dotMove[1] > 0 &&
@@ -423,13 +421,13 @@ namespace TETRISV1
                          Move.dotMove[1] == 0)
                     {
                         Move.dotMove[0]++;
-                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = NextPosition(); }
                         else Move.dotMove[0]--;
                     }
                     else
                     {
                         Move.dotMove[0]++; Move.dotMove[1]--;
-                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = NextPosition(); }
                         else { Move.dotMove[0]--; Move.dotMove[1]++; }
                     }
                     break;
@@ -454,21 +452,21 @@ namespace TETRISV1
         bool [,] Form_3 = new bool [,] {
                         {false,false,true},    // ..+
                         {true,true,true}};       // +++
-        public int Next()
+        public int NextPosition()
         {
             if (rollCount < 3) return rollCount + 1;
             else return 0;
         }
         public bool [,] Form { get; set; }
         public void RestorForm() => Form = Form_0;
-        public void Roll(Fild fg) => fg.FigNow.RollPosition(fg.FigNow.Next(), fg);
-        public void RollPosition(int rc, Fild fg)
+        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(fg.FigNow.NextPosition(), fg);
+        public void RotatePosition(int rc, Fild fg)
         {
             switch (rc)
             {
                 case (0):
                     Move.dotMove[0]--; Move.dotMove[1]++;
-                    if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                    if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                     else { Move.dotMove[0]++; Move.dotMove[1]--; }
 
                     break;
@@ -479,7 +477,7 @@ namespace TETRISV1
                     { Move.dotMove[0]++; Move.dotMove[1]--; flagOut1 = true; }
                     else Move.dotMove[0]++;
                     if (SupportMethods.Intersection(Form_1, fg))
-                    { Form = Form_1; rollCount = Next(); }
+                    { Form = Form_1; rollCount = NextPosition(); }
                     else
                     {
                         if (flagOut1) { Move.dotMove[0]--; Move.dotMove[1]++; }
@@ -492,7 +490,7 @@ namespace TETRISV1
                         fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 1] == true)
                     { Move.dotMove[0]--; flagOut2 = true; }
                     if (SupportMethods.Intersection(Form_2, fg))
-                    { Form = Form_2; rollCount = Next(); }
+                    { Form = Form_2; rollCount = NextPosition(); }
                     else if (flagOut2) Move.dotMove[0]++;
                     break;
                 case (3):
@@ -500,7 +498,7 @@ namespace TETRISV1
                     if (Move.dotMove[1] == 0 || fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] - 1] == true)
                         flagOut3 = true;
                     else Move.dotMove[1]--;
-                    if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
+                    if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = NextPosition(); }
                     else if (!flagOut3) Move.dotMove[1]++;
                     break;
             }
@@ -529,15 +527,15 @@ namespace TETRISV1
         bool [,] Form_3 = new bool [,] {                                               // .*.
                         {true,true,true},        // +++
                         {false,false,true}};   // .*+
-        public int Next()
+        public int NextPosition()
         {
             if (rollCount < 3) return rollCount + 1;
             else return 0;
         }
         public bool [,] Form { get; set; }
         public void RestorForm() => Form = Form_0;
-        public void Roll(Fild fg) => fg.FigNow.RollPosition(fg.FigNow.Next(), fg);
-        public void RollPosition(int rc, Fild fg)
+        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(fg.FigNow.NextPosition(), fg);
+        public void RotatePosition(int rc, Fild fg)
         {
             switch (rc)
             {
@@ -547,19 +545,19 @@ namespace TETRISV1
                          fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == true))
                     {
                         Move.dotMove[0]--; Move.dotMove[1]++;
-                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                         else { Move.dotMove[0]++; Move.dotMove[1]--; }
                     }
                     else if (Move.dotMove[0] > fg.FildGame.GetLength(0) - 3)
                     {
                         Move.dotMove[0]--; Move.dotMove[1]++;
-                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                         else { Move.dotMove[0]++; Move.dotMove[1]--; }
                     }
                     else
                     {
                         Move.dotMove[1]++;
-                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                         else Move.dotMove[1]--;
                     }
                     break;
@@ -567,7 +565,7 @@ namespace TETRISV1
                     if (Move.dotMove[1] == 0)
                     {
                         Move.dotMove[0]++;
-                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = NextPosition(); }
                         else { Move.dotMove[0]--; }
                     }
                     else if (Move.dotMove[1] < fg.FildGame.GetLength(1) - 2 &&       // offset right
@@ -575,19 +573,19 @@ namespace TETRISV1
                      fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] - 1] == true))
                     {
                         Move.dotMove[0]++;
-                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = NextPosition(); }
                         else Move.dotMove[0]--;
                     }
                     else
                     {
                         Move.dotMove[0]++; Move.dotMove[1]--;
-                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = NextPosition(); }
                         else { Move.dotMove[0]--; Move.dotMove[1]++; }
                     }
                     break;
                 case (2):
                     Move.dotMove[0]--;
-                    if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = Next(); }
+                    if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = NextPosition(); }
                     else Move.dotMove[0]++;
                     break;
                 case (3):
@@ -595,13 +593,13 @@ namespace TETRISV1
                          fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 1] == true)
                     {
                         Move.dotMove[0] -= 2;
-                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = NextPosition(); }
                         else Move.dotMove[1] += 2;
                     }
                     else if (Move.dotMove[1] == fg.FildGame.GetLength(1) - 2)
                     {
                         Move.dotMove[1]--;
-                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = NextPosition(); }
                         else { Move.dotMove[1]++; }
                     }
                     else if (Move.dotMove[1] > 0 && Move.dotMove[1] < fg.FildGame.GetLength(1) - 2 &&
@@ -609,10 +607,10 @@ namespace TETRISV1
                          fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == true))
                     {
                         Move.dotMove[1]--;
-                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = NextPosition(); }
                         else Move.dotMove[1]++;
                     }
-                    else if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
+                    else if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = NextPosition(); }
 
                     break;
             }
@@ -636,21 +634,21 @@ namespace TETRISV1
         bool [,] Form_3 = new bool [,] {                                      // .*.
                         {true,true,true},        // +++
                         {false,false,true}};   // .*+
-        public int Next()
+        public int NextPosition()
         {
             if (rollCount < 3) return rollCount + 1;
             else return 0;
         }
         public bool [,] Form { get; set; }
         public void RestorForm() => Form = Form_0;
-        public void Roll(Fild fg) => fg.FigNow.RollPosition(fg.FigNow.Next(), fg);
-        public void RollPosition(int rc, Fild fg)
+        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(fg.FigNow.NextPosition(), fg);
+        public void RotatePosition(int rc, Fild fg)
         {
             switch (rc)
             {
                 case (0):
                     Move.dotMove[0]--; Move.dotMove[1]++;
-                    if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                    if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                     else { Move.dotMove[0]++; Move.dotMove[1]--; }
                     break;
                 case (1):
@@ -660,7 +658,7 @@ namespace TETRISV1
                     { Move.dotMove[0]++; Move.dotMove[1]--; flagOut1 = true; }
                     else Move.dotMove[0]++;
                     if (SupportMethods.Intersection(Form_1, fg))
-                    { Form = Form_1; rollCount = Next(); }
+                    { Form = Form_1; rollCount = NextPosition(); }
                     else
                     {
                         if (flagOut1) { Move.dotMove[0]--; Move.dotMove[1]++; }
@@ -673,14 +671,14 @@ namespace TETRISV1
                         fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1]] == true)
                     { Move.dotMove[0]--; flagOut2 = true; }
                     if (SupportMethods.Intersection(Form_2, fg))
-                    { Form = Form_2; rollCount = Next(); }
+                    { Form = Form_2; rollCount = NextPosition(); }
                     else if (flagOut2) Move.dotMove[0]++;
                     break;
                 case (3):
                     bool flagOut3 = false;
                     if (Move.dotMove[1] == 0 || fg.FildGame[Move.dotMove[0], Move.dotMove[1] - 1] == true) flagOut3 = true;
                     else Move.dotMove[1]--;
-                    if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
+                    if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = NextPosition(); }
                     else if (!flagOut3) Move.dotMove[1]++;
                     break;
             }
@@ -712,11 +710,11 @@ namespace TETRISV1
                         {true,false},    // +.
                         {true,true},      // ++
                         {true,false}};   // +.
-        public int Next() => rollCount < 3 ? rollCount + 1 : 0;
+        public int NextPosition() => rollCount < 3 ? rollCount + 1 : 0;
         public bool [,] Form { get; set; }
         public void RestorForm() => Form = Form_0;
-        public void Roll(Fild fg) => RollPosition(Next(), fg);
-        public void RollPosition(int rc, Fild fg)
+        public void Rotate(Fild fg) => RotatePosition(NextPosition(), fg);
+        public void RotatePosition(int rc, Fild fg)
         {
             switch (rc)
             {
@@ -726,25 +724,25 @@ namespace TETRISV1
                         fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] - 1] == true)
                         flagOut0 = true;
                     else Move.dotMove[1]--;
-                    if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = Next(); }
+                    if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                     else if (!flagOut0) Move.dotMove[1]++;
                     break;
                 case (1):
-                    if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = Next(); }
+                    if (SupportMethods.Intersection(Form_1, fg)) { Form = Form_1; rollCount = NextPosition(); }
                     break;
                 case (2):
                     bool flagOut2 = false;
                     if (Move.dotMove[1] + 3 > fg.FildGame.GetLength(1) ||
                         fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == true)
                     { Move.dotMove[1]--; flagOut2 = true; }
-                    if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = Next(); }
+                    if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = NextPosition(); }
                     else { if (flagOut2) Move.dotMove[1]++; }
                     break;
                 case (3):
                     if (fg.FildGame.GetLength(0) - 2 > Move.dotMove[0])
                     {
                         Move.dotMove[1]++;
-                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = Next(); }
+                        if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = NextPosition(); }
                         else Move.dotMove[1]--;
                     }
                     break;

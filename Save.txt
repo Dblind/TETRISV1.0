@@ -1,10 +1,10 @@
 16
 10
 4
+7
 1
-5
-1
-0
+2
+30
           
           
           
@@ -18,10 +18,10 @@
           
           
           
-          
-          
-          
+    + ++  
+    +++   
+++  ++++++
 
 
- now TETRISV1.CubeFigure
- next TETRISV1.SFigure
+ now TETRISV1.SFigure
+ next TETRISV1.ReversSFigure

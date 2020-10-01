@@ -8,7 +8,7 @@ namespace TETRISV1
 
         public MoveBrick AddBrickColor;
         public MoveBrick DelBrickColor;
-        public DisplayVariable DisplayType;
+        public DisplayVariable RenderType;
         public DelegFallWallColor FallWallColorScreen;
         public DelegFallWallColor ClearUpLine;
         public bool[,] FildGame = new bool[,] { { false } };
@@ -105,9 +105,9 @@ namespace TETRISV1
         }
             public static int counter = 0;
 
-        public void Display()
+        public void ScreenRender()
         {
-            DisplayType(Run.GameFild);
+            RenderType(Run.GameFild);
             Fild.counter++;
         }
     }

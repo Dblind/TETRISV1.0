@@ -71,13 +71,13 @@ namespace TETRISV1
 
                 GameFild.AddBrickColor += Run.GameFild.FCScreen.AddBrick;
                 GameFild.DelBrickColor += Run.GameFild.FCScreen.DelBrick;
-                GameFild.DisplayType += ColorDisplay.ColorPrintDisplay;
+                GameFild.RenderType += ColorDisplay.ColorPrintDisplay;
                 GameFild.FallWallColorScreen += GameFild.FCScreen.FallWall;
                 GameFild.ClearUpLine += GameFild.FCScreen.ClearUpLine;
             }
-            else GameFild.DisplayType += PrintScreen.PrintCharScreen;
+            else GameFild.RenderType += PrintScreen.PrintCharScreen;
 
-            GameFild.Display();
+            GameFild.ScreenRender();
             while (GameFild.RunGame)
             {
                 TestMove();
@@ -87,22 +87,23 @@ namespace TETRISV1
                     count = 0;
                     if (Move.CheckDowd(GameFild)) Move.MoveDowd(GameFild);
                     else GameFild.NewFigure();
-                    GameFild.Display();
+                    GameFild.ScreenRender();
                 }
                 else count += Settings.Speed;//count++;
                 Thread.Sleep(10);
             }
+            Console.ResetColor();
             
             if (Settings.isColorScreen == 1)
             {
 
                 GameFild.AddBrickColor -= Run.GameFild.FCScreen.AddBrick;
                 GameFild.DelBrickColor -= Run.GameFild.FCScreen.DelBrick;
-                GameFild.DisplayType -= ColorDisplay.ColorPrintDisplay;
+                GameFild.RenderType -= ColorDisplay.ColorPrintDisplay;
                 GameFild.FallWallColorScreen -= GameFild.FCScreen.FallWall;
                 GameFild.ClearUpLine -= GameFild.FCScreen.ClearUpLine;
             }
-            else GameFild.DisplayType -= PrintScreen.PrintCharScreen;
+            else GameFild.RenderType -= PrintScreen.PrintCharScreen;
         }
     }
 }
