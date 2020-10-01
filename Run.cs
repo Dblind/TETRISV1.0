@@ -93,7 +93,7 @@ namespace TETRISV1
                 Thread.Sleep(10);
             }
             Console.ResetColor();
-            
+
             if (Settings.isColorScreen == 1)
             {
 

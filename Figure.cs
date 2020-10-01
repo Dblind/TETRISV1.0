@@ -2,28 +2,52 @@ using System;
 
 namespace TETRISV1
 {
-    class SourseBuilde
+    class ConteinerFigures
     {
-        //public static bool   keyBuild = '$', keyBottom = '#', background = '.';
+        IFigures[] indexedFigs = {
+            new SFigure(),
+            new ReversSFigure(),
+            new LFigure(),
+            new ReversLFigure(),
+            new CubeFigure(),
+            new LineFigure(),
+            new TFigure()
+        };
+
+        public IFigures this[int indx]
+        {
+            get { return indexedFigs[indx]; }
+            set { }
+        }
+        public void ResetColor()
+        {
+            foreach (var e in indexedFigs)
+            {
+                e.ResetColorFig();
+            }
+        }
     }
+
     interface IFigures
     {
         public ConsoleColor FigureColor { get; set; }
         public int NextPosition();
         public void RestorForm();
+        public void ResetColorFig();
         public void Rotate(Fild fg);
-        public void RotatePosition(int rc, Fild fg);
-        public bool [,] Form { get; set; }
+        public void RotationPosition(int rc, Fild fg);
+        public bool[,] Form { get; set; }
+        public bool[,] DefaultForm { get; set; }
 
     }
     class LineSizeTwoFigure : IFigures
     {
         public ConsoleColor FigureColor { get; set; }
-        int rollCount = 0;
-        bool [,] Form_0 = new bool [,] {
+        int rollCount;
+        bool[,] Form_0 = new bool[,] {
                         {true},    // +
                         {true}};   // +
-        bool [,] Form_2 = new bool [,] {
+        bool[,] Form_2 = new bool[,] {
                         {false,false},      // ..
                         {true,true}};       // ++
 
@@ -39,19 +63,26 @@ namespace TETRISV1
                 return 0;
             }
         }
-        public bool [,] Form { get; set; }//= new bool [,] { };
+        public bool[,] Form { get; set; }//= new bool [,] { };
+        public bool[,] DefaultForm { get { return Form_0; } set { } }
+
         public void RestorForm()
         {
             Form = Form_0;
+            rollCount = 0;
+        }
+        public void ResetColorFig()
+        {
+
         }
         public void Rotate(Fild fg)
         {
             int cc = fg.FigNow.NextPosition();
-            fg.FigNow.RotatePosition(cc, fg);
+            fg.FigNow.RotationPosition(cc, fg);
         }
         // +  --
         // +  ++
-        public void RotatePosition(int rc, Fild fg)
+        public void RotationPosition(int rc, Fild fg)
         {
             switch (rc)
             {
@@ -96,34 +127,40 @@ namespace TETRISV1
     class LineFigure : IFigures
     {
         public ConsoleColor FigureColor { get; set; }
-        public LineFigure()
-        {
-            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
-            else FigureColor = Settings.FigColor[5];
-        }
-        int rollCount = 1;
-        bool [,] Form_0 = new bool [,] {
+        int rollCount;
+        bool[,] Form_0 = new bool[,] {
                         {true,true,true,true}};
         // ....
         // ....
         // ++++
         // ....
-        bool [,] Form_1 = new bool [,] {
+        bool[,] Form_1 = new bool[,] {
                         {true},    // .+..
                         {true},    // .+..
                         {true},    // .+.+
                         {true}};   // .+..
+        public bool[,] Form { get; set; }
+        public bool[,] DefaultForm { get { return Form_0; } set { } }
 
+        public LineFigure()
+        {
+            ResetColorFig();
+            RestorForm();
+        }
         public int NextPosition() => rollCount > 0 ? 0 : 1;
-        public bool [,] Form { get; set; }
-        public void RestorForm() => Form = Form_1;
-        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(NextPosition(), fg);
-        public void RotatePosition(int rc, Fild fg)
+        public void RestorForm() { Form = Form_1; rollCount = 1; }
+        public void ResetColorFig()
+        {
+            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
+            else FigureColor = Settings.FigColor[5];
+        }
+        public void Rotate(Fild fg) => fg.FigNow.RotationPosition(NextPosition(), fg);
+        public void RotationPosition(int rc, Fild fg)
         {
             switch (rc)
             {
-                //  0123456789
-                //  -+----+--
+                //  0123456789 78910
+                //  -+----+--  +--
                 //  10b4-01b9
                 case (0):
                     int flagOut0 = 0;
@@ -139,7 +176,8 @@ namespace TETRISV1
                         fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == true)
                         flagOut0 |= 0b00001;    // right block +2
 
-                    if (Move.dotMove[1] == 0 || (flagOut0 & 0b11100) == 0b11100)    // zero, left
+                    if (Move.dotMove[1] == 0 || ((flagOut0 & 0b11100) == 0b11100 &&
+                            Move.dotMove[1] < fg.FigNow.Form.GetLength(1) - 3))   // zero, left
                     {
                         Move.dotMove[0] += 2;
                         if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
@@ -196,28 +234,36 @@ namespace TETRISV1
         //  -+ ++-  -+-
 
         public ConsoleColor FigureColor { get; set; }
-        public SFigure()
-        {
-            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
-            else FigureColor = Settings.FigColor[0];
-        }
-        int rollCount = 0;
-        bool [,] Form_0 = new bool [,] {
+
+        int rollCount;
+        bool[,] Form_0 = new bool[,] {
                         {true, false},
                         {true,true},
                         {false,true}};
-        bool [,] Form_1 = new bool [,] {
+        bool[,] Form_1 = new bool[,] {
                         {false,true,true},
                         {true,true,false}};
+        public bool[,] Form { get; set; }
+        public bool[,] DefaultForm { get { return Form_0; } set { } }
+
+        public SFigure()
+        {
+            ResetColorFig();
+            RestorForm();
+        }
         public int NextPosition()
         {
             if (rollCount < 1) return rollCount + 1;
             else return 0;
         }
-        public bool [,] Form { get; set; }
-        public void RestorForm() => Form = Form_0;
-        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(fg.FigNow.NextPosition(), fg);
-        public void RotatePosition(int rc, Fild fg)
+        public void RestorForm() { Form = Form_0; rollCount = 0; }
+        public void ResetColorFig()
+        {
+            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
+            else FigureColor = Settings.FigColor[0];
+        }
+        public void Rotate(Fild fg) => fg.FigNow.RotationPosition(fg.FigNow.NextPosition(), fg);
+        public void RotationPosition(int rc, Fild fg)
         {
             switch (rc)
             {
@@ -244,28 +290,35 @@ namespace TETRISV1
     class ReversSFigure : IFigures
     {
         public ConsoleColor FigureColor { get; set; }
-        public ReversSFigure()
-        {
-            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
-            else FigureColor = Settings.FigColor[1];
-        }
-        int rollCount = 0;
-        bool [,] Form_0 = new bool [,] {
+        int rollCount;
+        bool[,] Form_0 = new bool[,] {
                         {false, true},      // -+  
                         {true, true},       // ++  ++-
                         {true, false}};     // +-  -++
-        bool [,] Form_1 = new bool [,] {
+        bool[,] Form_1 = new bool[,] {
                         {true, true, false},
                         {false, true, true}};
+        public bool[,] Form { get; set; }
+        public bool[,] DefaultForm { get { return Form_0; } set { } }
+
+        public ReversSFigure()
+        {
+            ResetColorFig();
+            RestorForm();
+        }
         public int NextPosition()
         {
             if (rollCount < 1) return rollCount + 1;
             else return 0;
         }
-        public bool [,] Form { get; set; }
-        public void RestorForm() => Form = Form_0;
-        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(fg.FigNow.NextPosition(), fg);
-        public void RotatePosition(int rc, Fild fg)
+        public void RestorForm() { Form = Form_0; rollCount = 0; }
+        public void ResetColorFig()
+        {
+            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
+            else FigureColor = Settings.FigColor[1];
+        }
+        public void Rotate(Fild fg) => fg.FigNow.RotationPosition(fg.FigNow.NextPosition(), fg);
+        public void RotationPosition(int rc, Fild fg)
         {
             switch (rc)
             {
@@ -292,55 +345,68 @@ namespace TETRISV1
     class CubeFigure : IFigures
     {
         public ConsoleColor FigureColor { get; set; }
+        bool[,] Form_0 = new bool[,] {
+                        {true,true},
+                        {true,true}};
+        public bool[,] Form { get; set; }
+        public bool[,] DefaultForm { get { return Form; } set { } }
         public CubeFigure()
         {
-            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
-            else FigureColor = Settings.FigColor[4];
+            ResetColorFig();
+            RestorForm();
         }
         public int NextPosition() { return 0; }
         public void RestorForm()
         {
-            Form = new bool [,] {
-                        {true,true},
-                        {true,true}};
+            Form = Form_0;
+        }
+        public void ResetColorFig()
+        {
+            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
+            else FigureColor = Settings.FigColor[4];
         }
         public void Rotate(Fild fg) { }
-        public void RotatePosition(int rc, Fild fg) { }
-        public bool [,] Form { get; set; }
-
+        public void RotationPosition(int rc, Fild fg) { }
     }
     class LFigure : IFigures
     {
         public ConsoleColor FigureColor { get; set; }
-        public LFigure()
-        {
-            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
-            else FigureColor = Settings.FigColor[2];
-        }
-        int rollCount = 0;
-        bool [,] Form_0 = new bool [,] {
+        int rollCount;
+        bool[,] Form_0 = new bool[,] {
                         {true,false},    // +.
                         {true,false},    // +.
                         {true,true}};     // ++
-        bool [,] Form_1 = new bool [,] {
+        bool[,] Form_1 = new bool[,] {
                         {true,true,true},        // +++
                         {true,false,false}};   // +..
-        bool [,] Form_2 = new bool [,] {
+        bool[,] Form_2 = new bool[,] {
                         {true,true},      // ++9#
                         {false,true},    // .+89
                         {false,true}};   // .+..#
-        bool [,] Form_3 = new bool [,] {
+        bool[,] Form_3 = new bool[,] {
                         {false,false,true},    // ..+
                         {true,true,true}};       // +++
+        public bool[,] Form { get; set; }
+        public bool[,] DefaultForm { get { return Form_0; } set { } }
+
+        public LFigure()
+        {
+            ResetColorFig();
+            RestorForm();
+        }
         public int NextPosition()
         {
             if (rollCount < 3) return rollCount + 1;
             else return 0;
         }
-        public bool [,] Form { get; set; }
-        public void RestorForm() => Form = Form_0;
-        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(fg.FigNow.NextPosition(), fg);
-        public void RotatePosition(int rc, Fild fg)
+        public void RestorForm() { Form = Form_0; rollCount = 0; }
+        public void ResetColorFig()
+        {
+            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
+            else FigureColor = Settings.FigColor[2];
+        }
+        public void Rotate(Fild fg) => fg.FigNow.RotationPosition(fg.FigNow.NextPosition(), fg);
+        public void RotationPosition(int rc, Fild fg)
         {
             switch (rc)
             {
@@ -434,22 +500,22 @@ namespace TETRISV1
             }
         }
     }
-    class LFigureV2 : IFigures      // have bug
+    class LFigureV2 //: IFigures      // have bug
     {
         public ConsoleColor FigureColor { get; set; }
         int rollCount = 0;
-        bool [,] Form_0 = new bool [,] {
+        bool[,] Form_0 = new bool[,] {
                         {true,false},    // +.
                         {true,false},    // +.
                         {true,true}};     // ++
-        bool [,] Form_1 = new bool [,] {
+        bool[,] Form_1 = new bool[,] {
                         {true,true,true},        // +++
                         {true,false,false}};   // +..
-        bool [,] Form_2 = new bool [,] {
+        bool[,] Form_2 = new bool[,] {
                         {true,true},      // ++9#
                         {false,true},    // .+89
                         {false,true}};   // .+..#
-        bool [,] Form_3 = new bool [,] {
+        bool[,] Form_3 = new bool[,] {
                         {false,false,true},    // ..+
                         {true,true,true}};       // +++
         public int NextPosition()
@@ -457,10 +523,11 @@ namespace TETRISV1
             if (rollCount < 3) return rollCount + 1;
             else return 0;
         }
-        public bool [,] Form { get; set; }
-        public void RestorForm() => Form = Form_0;
-        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(fg.FigNow.NextPosition(), fg);
-        public void RotatePosition(int rc, Fild fg)
+        public bool[,] Form { get; set; }
+        public bool[,] DefaultForm { get { return Form_0; } set { } }
+        public void RestorForm() { Form = Form_0; rollCount = 0; }
+        public void Rotate(Fild fg) => fg.FigNow.RotationPosition(fg.FigNow.NextPosition(), fg);
+        public void RotationPosition(int rc, Fild fg)
         {
             switch (rc)
             {
@@ -507,48 +574,55 @@ namespace TETRISV1
     class ReversLFigure : IFigures
     {
         public ConsoleColor FigureColor { get; set; }
-        public ReversLFigure()
-        {
-            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
-            else FigureColor = Settings.FigColor[3];
-        }
-        int rollCount = 0;
-        bool [,] Form_0 = new bool [,] {
+        int rollCount;
+        bool[,] Form_0 = new bool[,] {
                         {false,true},    // .+
                         {false,true},    // .+
-                        {true,true}};     // ++
-        bool [,] Form_1 = new bool [,] {
-                        {true,false,false},    // +..
-                        {true,true,true}};       // +++
-        bool [,] Form_2 = new bool [,] {
+                        {true,true}};    // ++
+        bool[,] Form_1 = new bool[,] {
+                        {true,false,false},     // +..
+                        {true,true,true}};      // +++
+        bool[,] Form_2 = new bool[,] {
                         {true,true},      // ++
                         {true,false},    // +.
                         {true,false}};   // +.
-        bool [,] Form_3 = new bool [,] {                                               // .*.
-                        {true,true,true},        // +++
-                        {false,false,true}};   // .*+
+        bool[,] Form_3 = new bool[,] {          // .*.
+                        {true,true,true},       // +++
+                        {false,false,true}};    // .*+
+        public bool[,] Form { get; set; }
+        public bool[,] DefaultForm { get { return Form_0; } set { } }
+
+        public ReversLFigure()
+        {
+            ResetColorFig();
+            RestorForm();
+        }
         public int NextPosition()
         {
             if (rollCount < 3) return rollCount + 1;
             else return 0;
         }
-        public bool [,] Form { get; set; }
-        public void RestorForm() => Form = Form_0;
-        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(fg.FigNow.NextPosition(), fg);
-        public void RotatePosition(int rc, Fild fg)
+        public void RestorForm() { Form = Form_0; rollCount = 0; }
+        public void ResetColorFig()
+        {
+            if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
+            else FigureColor = Settings.FigColor[3];
+        }
+        public void Rotate(Fild fg) => fg.FigNow.RotationPosition(fg.FigNow.NextPosition(), fg);
+        public void RotationPosition(int rc, Fild fg)
         {
             switch (rc)
             {
                 case (0):
-                    if (Move.dotMove[0] < fg.FildGame.GetLength(0) - 2 &&
-                        (fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 1] == true ||
-                         fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == true))
+                    if (Move.dotMove[0] == fg.FildGame.GetLength(0) - 2)
                     {
                         Move.dotMove[0]--; Move.dotMove[1]++;
                         if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
                         else { Move.dotMove[0]++; Move.dotMove[1]--; }
                     }
-                    else if (Move.dotMove[0] > fg.FildGame.GetLength(0) - 3)
+                    else if (Move.dotMove[0] > 0 &&
+                         (fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 1] == true ||
+                          fg.FildGame[Move.dotMove[0] + 2, Move.dotMove[1] + 2] == true))
                     {
                         Move.dotMove[0]--; Move.dotMove[1]++;
                         if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
@@ -592,7 +666,7 @@ namespace TETRISV1
                     if (Move.dotMove[1] == fg.FildGame.GetLength(1) - 2 &&
                          fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 1] == true)
                     {
-                        Move.dotMove[0] -= 2;
+                        Move.dotMove[1] -= 2;
                         if (SupportMethods.Intersection(Form_3, fg)) { Form = Form_3; rollCount = NextPosition(); }
                         else Move.dotMove[1] += 2;
                     }
@@ -616,22 +690,22 @@ namespace TETRISV1
             }
         }
     }
-    class ReversLFigureV2 : IFigures        // have bug
+    class ReversLFigureV2 //: IFigures        // have bug
     {
         public ConsoleColor FigureColor { get; set; }
         int rollCount = 0;
-        bool [,] Form_0 = new bool [,] {
+        bool[,] Form_0 = new bool[,] {
                         {false,true},    // .+
                         {false,true},    // .+
                         {true,true}};     // ++
-        bool [,] Form_1 = new bool [,] {
+        bool[,] Form_1 = new bool[,] {
                         {true,false,false},    // +..
                         {true,true,true}};       // +++
-        bool [,] Form_2 = new bool [,] {
+        bool[,] Form_2 = new bool[,] {
                         {true,true},      // ++
                         {true,false},    // +.
                         {true,false}};   // +.
-        bool [,] Form_3 = new bool [,] {                                      // .*.
+        bool[,] Form_3 = new bool[,] {                                      // .*.
                         {true,true,true},        // +++
                         {false,false,true}};   // .*+
         public int NextPosition()
@@ -639,10 +713,11 @@ namespace TETRISV1
             if (rollCount < 3) return rollCount + 1;
             else return 0;
         }
-        public bool [,] Form { get; set; }
-        public void RestorForm() => Form = Form_0;
-        public void Rotate(Fild fg) => fg.FigNow.RotatePosition(fg.FigNow.NextPosition(), fg);
-        public void RotatePosition(int rc, Fild fg)
+        public bool[,] Form { get; set; }
+        public bool[,] DefaultForm { get { return Form_0; } set { } }
+        public void RestorForm() { Form = Form_0; rollCount = 0; }
+        public void Rotate(Fild fg) => fg.FigNow.RotationPosition(fg.FigNow.NextPosition(), fg);
+        public void RotationPosition(int rc, Fild fg)
         {
             switch (rc)
             {
@@ -685,43 +760,50 @@ namespace TETRISV1
         }
     }
 
-
     class TFigure : IFigures
     {
         public ConsoleColor FigureColor { get; set; }
+        int rollCount;
+        bool[,] Form_0 = new bool[,] {
+                        {false,false,false},  // ...
+                        {true,true,true},        // +++
+                        {false,true,false}};   // .+.
+        bool[,] Form_1 = new bool[,] {
+                        {false,true},    // .+
+                        {true,true},      // ++
+                        {false,true}};   // .+
+        bool[,] Form_2 = new bool[,] {
+                        {false,true,false},    // .+.
+                        {true,true,true}};       // +++
+        bool[,] Form_3 = new bool[,] {
+                        {true,false},    // +.
+                        {true,true},      // ++
+                        {true,false}};   // +.
+        public bool[,] Form { get; set; }
+        public bool[,] DefaultForm { get { return Form_0; } set { } }
+
         public TFigure()
+        {
+            ResetColorFig();
+            RestorForm();
+        }
+        public int NextPosition() => rollCount < 3 ? rollCount + 1 : 0;
+        public void RestorForm() { Form = Form_0; rollCount = 0; }
+        public void ResetColorFig()
         {
             if (Settings.isSingleColorBlock) FigureColor = Settings.ConsColBrick;
             else FigureColor = Settings.FigColor[6];
         }
-        int rollCount = 0;
-        bool [,] Form_0 = new bool [,] {
-                        {false,false,false},  // ...
-                        {true,true,true},        // +++
-                        {false,true,false}};   // .+.
-        bool [,] Form_1 = new bool [,] {
-                        {false,true},    // .+
-                        {true,true},      // ++
-                        {false,true}};   // .+
-        bool [,] Form_2 = new bool [,] {
-                        {false,true,false},    // .+.
-                        {true,true,true}};       // +++
-        bool [,] Form_3 = new bool [,] {
-                        {true,false},    // +.
-                        {true,true},      // ++
-                        {true,false}};   // +.
-        public int NextPosition() => rollCount < 3 ? rollCount + 1 : 0;
-        public bool [,] Form { get; set; }
-        public void RestorForm() => Form = Form_0;
-        public void Rotate(Fild fg) => RotatePosition(NextPosition(), fg);
-        public void RotatePosition(int rc, Fild fg)
+        public void Rotate(Fild fg) => RotationPosition(NextPosition(), fg);
+        public void RotationPosition(int rc, Fild fg)
         {
             switch (rc)
             {
                 case (0):
                     bool flagOut0 = false;
                     if (Move.dotMove[1] == 0 ||
-                        fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] - 1] == true)
+                        fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] - 1] == true &&
+                        Move.dotMove[1] < fg.FigNow.Form.GetLength(1) - 2)
                         flagOut0 = true;
                     else Move.dotMove[1]--;
                     if (SupportMethods.Intersection(Form_0, fg)) { Form = Form_0; rollCount = NextPosition(); }
@@ -732,8 +814,9 @@ namespace TETRISV1
                     break;
                 case (2):
                     bool flagOut2 = false;
-                    if (Move.dotMove[1] + 3 > fg.FildGame.GetLength(1) ||
-                        fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == true)
+                    if (Move.dotMove[1] == fg.FildGame.GetLength(1) - 2 ||
+                        (Move.dotMove[1] < fg.FildGame.GetLength(1) - 2 && Move.dotMove[1] > 0 &&
+                        fg.FildGame[Move.dotMove[0] + 1, Move.dotMove[1] + 2] == true))
                     { Move.dotMove[1]--; flagOut2 = true; }
                     if (SupportMethods.Intersection(Form_2, fg)) { Form = Form_2; rollCount = NextPosition(); }
                     else { if (flagOut2) Move.dotMove[1]++; }

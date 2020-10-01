@@ -51,6 +51,10 @@ namespace TETRISV1
                     Console.CursorVisible = true;
                     break;
             }
+            // if (Move.dotMove[0] < 0)
+            // {
+            //     System.Console.WriteLine("ffasdf");
+            // }
         }
     }
 }

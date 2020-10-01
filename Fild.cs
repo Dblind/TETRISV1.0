@@ -5,6 +5,7 @@ namespace TETRISV1
     delegate void DelegFallWallColor(int y, int x);
     class Fild
     {
+        public static int RenderCounter = 0;
 
         public MoveBrick AddBrickColor;
         public MoveBrick DelBrickColor;
@@ -13,7 +14,6 @@ namespace TETRISV1
         public DelegFallWallColor ClearUpLine;
         public bool[,] FildGame = new bool[,] { { false } };
         public FildColor FCScreen;
-
         public bool RunGame = true;
         public IFigures FigNow; //= new IFigures();
         public IFigures FigNext { get; set; }
@@ -33,7 +33,7 @@ namespace TETRISV1
                 }
             }
             FCScreen = new FildColor(this);
-            numberFigNext = rand.Next(1, 8);
+            numberFigNext = rand.Next(0, 7);
             MakeNextFig();
 
         }
@@ -49,9 +49,10 @@ namespace TETRISV1
             catch { }
             Move.dotMove[0] = 0; Move.dotMove[1] = Move.startMovePoint;
             FigNow = FigNext; numberFigNow = numberFigNext;
-            numberFigNext = rand.Next(1, 8);
+            FigNow.RestorForm();
+            numberFigNext = rand.Next(0, 7);
             MakeNextFig();
-            if (!SupportMethods.Intersection(FigNow.Form, this))
+            if (!SupportMethods.Intersection(FigNow.DefaultForm, this))
             {
                 Console.CursorTop = 3; Console.CursorLeft = 4;
                 Console.BackgroundColor = ConsoleColor.DarkMagenta;
@@ -72,48 +73,22 @@ namespace TETRISV1
 
             }
         }
+        public ConteinerFigures ContFig = new ConteinerFigures();
         public void MakeNextFig()
         {
-            switch (numberFigNext)
-            {
-                case (0):
-                    FigNext = new LineSizeTwoFigure(); FigNext.RestorForm();
-                    // FigNow = new LineSizeTwo();
-                    break;
-                case (1):
-                    FigNext = new SFigure(); FigNext.RestorForm();
-                    break;
-                case (2):
-                    FigNext = new ReversSFigure(); FigNext.RestorForm();
-                    break;
-                case (3):
-                    FigNext = new LFigure(); FigNext.RestorForm();
-                    break;
-                case (4):
-                    FigNext = new ReversLFigure(); FigNext.RestorForm();
-                    break;
-                case (5):
-                    FigNext = new CubeFigure(); FigNext.RestorForm();
-                    break;
-                case (6):
-                    FigNext = new LineFigure(); FigNext.RestorForm();
-                    break;
-                case (7):
-                    FigNext = new TFigure(); FigNext.RestorForm();
-                    break;
-            }
+            FigNext = ContFig[numberFigNext];
         }
-            public static int counter = 0;
 
         public void ScreenRender()
         {
             RenderType(Run.GameFild);
-            Fild.counter++;
+            Fild.RenderCounter++;
         }
     }
 
     class PrintScreen
     {
+        static readonly ConsoleColor BackColor = ConsoleColor.Black;
         public static void PrintCharScreen(Fild fg)
         {
             Move.SetFigForm(fg);
@@ -131,8 +106,7 @@ namespace TETRISV1
             }
             Move.TakeOutFigForm(fg);
 
-            Console.ResetColor();
-            System.Console.WriteLine(Fild.counter);
+            System.Console.WriteLine(Fild.RenderCounter);
 
             // print Score
             Console.CursorTop = 0;
@@ -141,18 +115,23 @@ namespace TETRISV1
             System.Console.WriteLine(String.Format($"{fg.Score,10}"));
 
             // clear place for view NextFig
-            for (int i = 0; i < fg.FigNext.Form.GetLength(0); i++)
+            int CounterLines = 0;
+            for (int i = 0; i < fg.FigNext.DefaultForm.GetLength(0); i++)
             {
+                CounterLines++;
                 ClearLine();
-                for (int j = 0; j < fg.FigNext.Form.GetLength(1); j++)
-                    if (fg.FigNext.Form[i, j]) System.Console.Write(Settings.keyBuild);
+                for (int j = 0; j < fg.FigNext.DefaultForm.GetLength(1); j++)
+                    if (fg.FigNext.DefaultForm[i, j]) System.Console.Write(Settings.keyBuild);
                     else System.Console.Write(Settings.keyBackground);
             }
-            if (fg.FigNext.Form.GetLength(0) < 3)
-            {
-                ClearLine(); ClearLine();
-            }
-            else if (fg.FigNext.Form.GetLength(0) < 4) ClearLine();
+            while (CounterLines < 4) { ClearLine(); CounterLines++; }
+
+            // Task
+            System.Console.WriteLine();
+            System.Console.WriteLine();
+            Console.CursorLeft = fg.FildGame.GetLength(1) + 3;
+            System.Console.Write(" Q: quit.");
+
             void ClearLine()
             {
                 System.Console.WriteLine();
@@ -160,15 +139,6 @@ namespace TETRISV1
                 System.Console.Write($"    ");
                 Console.CursorLeft = fg.FildGame.GetLength(1) + 3;
             }
-
-            // Task
-            System.Console.WriteLine();
-            System.Console.WriteLine();
-            Console.CursorLeft = fg.FildGame.GetLength(1) + 3;
-            System.Console.Write("Q: quit.");
-
-
-
         }
     }
 }

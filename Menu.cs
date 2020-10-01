@@ -50,6 +50,7 @@ namespace TETRISV1
                         break;
                     case (3):
                         if (Run.haveGame) Save.SeveGame();
+                        Run.isSave = true;
                         break;
                     case (4):
                         SettingsMenu.Settings();
@@ -309,6 +310,7 @@ namespace TETRISV1
                     {
                         case (1):
                             TETRISV1.Settings.isSingleColorBlock = !TETRISV1.Settings.isSingleColorBlock;
+                            Run.GameFild.ContFig.ResetColor();
                             break;
                         case (2):
                             Settings.ConsColBrick = ChooseColor();

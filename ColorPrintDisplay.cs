@@ -4,10 +4,11 @@ namespace TETRISV1
 {
     class ColorDisplay
     {
+        static readonly ConsoleColor BackColor = ConsoleColor.Black;
         public static void ColorPrintDisplay(Fild fg)
         {
             Move.SetFigForm(fg);
-            System.Console.CursorTop = 0; Console.CursorLeft = 0;
+            System.Console.CursorTop = Console.CursorLeft = 0;
             Console.BackgroundColor = Settings.ConsColBackground;
             for (int i = 0; i < fg.FildGame.GetLength(0); i++)
             {
@@ -21,37 +22,43 @@ namespace TETRISV1
             Move.TakeOutFigForm(fg);
 
             Console.ResetColor();
-            System.Console.WriteLine(Fild.counter);
+            System.Console.WriteLine(Fild.RenderCounter);
 
 
             // print Score
             Console.CursorTop = 0;
             Console.CursorLeft = 2 * fg.FildGame.GetLength(1) + 3;
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.BackgroundColor = Settings.ConsColBackground;
+            Console.BackgroundColor = BackColor;
             System.Console.WriteLine(String.Format($"{fg.Score,10}"));
 
             // clear place for view NextFig
-            for (int i = 0; i < fg.FigNext.Form.GetLength(0); i++)
+            int CounterLines = 0;
+            for (int i = 0; i < fg.FigNext.DefaultForm.GetLength(0); i++)
             {
+                CounterLines++;
                 ClearLine();
-                for (int j = 0; j < fg.FigNext.Form.GetLength(1); j++)
-                    if (fg.FigNext.Form[i, j] == true)
+                for (int j = 0; j < fg.FigNext.DefaultForm.GetLength(1); j++)
+                    if (fg.FigNext.DefaultForm[i, j] == true)
                     {
                         Console.BackgroundColor = fg.FigNext.FigureColor;
                         System.Console.Write("  ");
                     }
                     else
                     {
-                        Console.BackgroundColor = Settings.ConsColBackground;
+                        Console.BackgroundColor = BackColor;
                         Console.Write("  ");
                     }
             }
-            if (fg.FigNext.Form.GetLength(0) < 3)
-            {
-                ClearLine(); ClearLine();
-            }
-            else if (fg.FigNext.Form.GetLength(0) < 4) ClearLine();
+            while (CounterLines < 4) { ClearLine(); CounterLines++; }
+
+            // Task
+            System.Console.WriteLine();
+            System.Console.WriteLine();
+            Console.BackgroundColor = BackColor;
+            Console.CursorLeft = 2 * fg.FildGame.GetLength(1) + 3;
+            System.Console.Write(" Q: quit.");
+
             void ClearLine()
             {
                 Console.BackgroundColor = Settings.ConsColBackground;
@@ -60,14 +67,6 @@ namespace TETRISV1
                 System.Console.Write($"        ");
                 Console.CursorLeft = 2 * fg.FildGame.GetLength(1) + 3;
             }
-
-            // Task
-            System.Console.WriteLine();
-            System.Console.WriteLine();
-            Console.BackgroundColor = Settings.ConsColBackground;
-            Console.CursorLeft = 2 * fg.FildGame.GetLength(1) + 3;
-            System.Console.Write("Q: quit.");
-
         }
     }
     delegate void MoveBrick(int x, int y, ConsoleColor col);

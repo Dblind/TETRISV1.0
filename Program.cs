@@ -11,7 +11,7 @@ namespace TETRISV1._0
             
             RunNewGame NewGame = new RunNewGame();
             NewGame.RunGame();
-
+            
             /*
             int sizeFild = 10;
             //char[,] FildGame = new char[sizeFild, sizeFild];
